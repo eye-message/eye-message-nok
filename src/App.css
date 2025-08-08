@@ -7,5 +7,4 @@
 .main-content {
   flex: 1;
   overflow-y: auto;
-  height: 100%; /* ✅ 캘린더 세로 늘어나게 */
 }

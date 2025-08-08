@@ -1,11 +1,9 @@
-/* 캘린더 전체 영역 */
 .calendar-wrapper {
   height: 100%;
   width: 100%;
   position: relative;
 }
 
-/* react-calendar 기본 컨테이너 */
 .react-calendar {
   width: 100% !important;
   height: 100% !important;
@@ -14,23 +12,21 @@
   border: none;
 }
 
-/* 월별 날짜 셀 영역 높이(임시) */
-.react-calendar__month-view__days {
-  height: 100px;
-}
-
-/* 캘린더 상단 네비게이션 영역 */
 .react-calendar__navigation {
   height: 80px;
   flex-shrink: 0;
 }
 
-/* 월·연도 표시 라벨 */
 .react-calendar__navigation__label {
   font-size: 30px;
 }
 
-/* 날짜 셀 기본 스타일 */
+.react-calendar__month-view__days {
+  height: calc(100vh - 56px - 60px - 50px);
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+}
 .react-calendar__tile {
   display: flex;
   flex-direction: column;
@@ -41,14 +37,12 @@
   height: 100%;
 }
 
-/* 날짜 숫자 */
 .react-calendar__tile abbr {
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 4px;
 }
 
-/* 요일 텍스트 스타일 */
 .react-calendar__month-view__weekdays__weekday abbr {
   font-size: 20px;
   font-weight: 600;
@@ -56,14 +50,16 @@
   text-decoration: none;
 }
 
-/* 요일 영역 배치 */
 .react-calendar__month-view__weekdays__weekday {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* 오늘 버튼 */
+.react-calendar__navigation {
+  height: 80px;
+}
+
 .today-button {
   position: absolute;
   bottom: 80px;
@@ -77,16 +73,4 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   z-index: 10;
-}
-
-/* 일지 작성 표시, 꽉차게 */
-
-.has-diary {
-  background-color: #d7f5d7;
-  border-radius: 8px;
-}
-
-/* 선택된 날짜와 충돌 방지 */
-.react-calendar__tile--active.has-diary {
-  background-color: #a6e3a1;
 }
