@@ -1,0 +1,157 @@
+.diary-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #fcfcfc;
+  font-family: sans-serif;
+}
+
+.diary-date {
+  text-align: center;
+  padding: 16px;
+  background-color: #f2f2f2;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.diary-section {
+  flex: 1;
+  padding: 20px;
+}
+
+.diary-label {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* 상태 선택 영역 */
+.status-options {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+/* 라디오 + 배지 묶음 */
+.status-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 상태 배지 공통 스타일 */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+/* 상태별 색상 */
+.good {
+  background-color: #b2f2bb;
+  color: #2b8a3e;
+}
+
+.normal {
+  background-color: #fff3bf;
+  color: #f08c00;
+}
+
+.danger {
+  background-color: #ffa8a8;
+  color: #c92a2a;
+}
+
+/* 선택된 상태 강조 */
+.status-option input:checked + .status-badge {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+/* 상태 미선택 경고문구 */
+.status-warning {
+  color: #e74c3c;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.diary-textarea {
+  width: 100%;
+  height: 250px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  resize: none;
+  background-color: #f5f5f5;
+  margin-bottom: 20px;
+}
+
+.diary-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-register {
+  background-color: #3478f6;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.btn-delete {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* 삭제 팝업 */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 240px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+}
+
+.btn-yes,
+.btn-no {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-yes {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn-no {
+  background-color: #bdc3c7;
+  color: black;
+}

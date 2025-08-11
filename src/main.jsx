@@ -32,7 +32,10 @@ const App = () => {
           <Route path="/board" element={<Board />} />
           <Route path="/list" element={<MessageList />} />
           <Route path="/add" element={<MessageAddForm />} />
-          <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/calendar" element={<CalendarMain />}>
+            <Route index element={<CalendarPage />} />
+            <Route path="diary" element={<CalendarDiary />} />
+          </Route>
           <Route path="/settings" element={<Settings />} />
         </Route>
       </Routes>

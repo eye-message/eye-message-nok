@@ -80,3 +80,12 @@
   cursor: pointer;
   z-index: 10;
 }
+
+.has-diary {
+  background-color: #d7f5d7;
+  border-radius: 8px;
+}
+
+.react-calendar__tile--active.has-diary {
+  background-color: #a6e3a1;
+}
