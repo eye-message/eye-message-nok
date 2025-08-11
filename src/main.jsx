@@ -1,24 +1,20 @@
 import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import {
-  Navigate,
-  Route,
-  BrowserRouter as Router,
-  Routes,
-} from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
+import Layout from "./pages/Layout";
 import Notification from "./pages/Notification";
 import Board from "./pages/Board";
-import Add from "./pages/Add";
-import CalendarPage from "./pages/CalendarPage";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
-import Layout from "./pages/Layout";
-
-import "./styles/App.css";
 import Signup from "./pages/Signup";
 import MessageAddForm from "./pages/MessageAddForm";
 import MessageList from "./pages/MessageList";
+import CalendarPage from "./pages/CalendarPage";
+import CalendarMain from "./pages/CalendarMain";
+import CalendarDiary from "./pages/CalendarDiary";
+
+import "./styles/App.css";
 
 const App = () => {
   return (
