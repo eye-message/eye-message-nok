@@ -1,0 +1,23 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  font-size: 16px; /* 기본 폰트 크기 */
+  box-sizing: border-box;
+}
+
+.app {
+  max-width: 430px; /* 가장 큰 모바일 너비 기준 */
+  margin: 0 auto; /* 좌우 가운데 정렬 */
+  height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  overflow-y: auto;
+  height: 100%; /* ✅ 캘린더 세로 늘어나게 */
+}

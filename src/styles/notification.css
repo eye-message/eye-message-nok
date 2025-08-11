@@ -1,0 +1,246 @@
+/* 컨테이너 */
+.notification-container {
+  width: 100%;
+  max-width: 375px;
+  margin: 0 auto;
+  background: #f8f9fa;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 헤더 */
+.notification-header {
+  background: #fff;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e9ecef;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2c3e50;
+}
+.unread-badge {
+  background: #ff4444;
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+/* 리스트 카드 */
+.notifications-list {
+  background: #fff;
+  margin: 8px 16px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* 아이템 */
+.notification-item {
+  position: relative;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  overflow: hidden;
+  touch-action: pan-x;
+}
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+/* 한 줄(그리드 3열) : [타입 44px | 메시지 auto | 버튼 auto] */
+.notification-row {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  transition: transform 0.25s ease;
+  position: relative;
+  background: #fff;
+}
+.notification-row.unread {
+  background: #f8f9ff;
+}
+.notification-row.emergency {
+  background: #fff7f7;
+}
+.notification-row.swiped {
+  transform: translateX(-84px);
+}
+
+/* 타입 태그(왼쪽) */
+.type-pill {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  background: #f1f3f5;
+  color: #333;
+}
+.notification-row.emergency .type-pill {
+  background: #ffe2e2;
+}
+.notification-row.normal .type-pill {
+  background: #fff1db;
+}
+.notification-row.good .type-pill {
+  background: #e6f4ea;
+}
+
+/* 메시지(가운데) */
+.message-wrap {
+  min-width: 0;
+}
+.message-text {
+  font-size: 14px;
+  line-height: 1.45;
+  color: #2c3e50;
+  word-break: break-word;
+  margin-right: 0; /* 혹시 여분 있으면 제거 */
+}
+
+/* 오른쪽 레일: 위(버튼) / 아래(시간) */
+.right-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between; /* 버튼 위, 시간 아래 */
+  gap: 8px;
+  height: 100%;
+  min-width: 92px; /* 버튼+여백 확보, 필요시 84~110px 조절 */
+}
+
+/* 시간 스타일 */
+.time {
+  display: flex;
+  gap: 6px;
+  font-size: 11px;
+  color: #6c757d;
+  line-height: 1;
+}
+.time .dot {
+  opacity: 0.7;
+}
+
+/* 확인 버튼(오른쪽) */
+.confirm-toggle {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  background: #4caf50;
+  color: #fff;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+.confirm-toggle:hover {
+  background: #45a049;
+}
+.confirm-toggle.on {
+  background: #28a745;
+}
+.confirm-toggle:active {
+  transform: translateY(1px);
+}
+
+/* 스와이프 삭제 버튼 (노출 영역) */
+.swipe-delete-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 84px;
+  background: #ff4444;
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.swipe-delete-btn:hover {
+  background: #e53e3e;
+}
+
+/* 빈 상태 */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6c757d;
+}
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+.empty-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.empty-description {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* 하단 액션 */
+.bottom-actions {
+  padding: 16px;
+  background: #fff;
+  margin: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.delete-confirmed-btn {
+  width: 100%;
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+.delete-confirmed-btn:hover:not(:disabled) {
+  background: #c82333;
+  transform: translateY(-1px);
+}
+.delete-confirmed-btn:disabled {
+  background: #ddd;
+  color: #999;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 롱프레스 힌트 (아이템 내부에 뜸) */
+.swipe-hint {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #adb5bd;
+  font-size: 12px;
+  pointer-events: none;
+  opacity: 0.9;
+}

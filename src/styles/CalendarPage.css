@@ -1,7 +1,9 @@
 .calendar-wrapper {
+  height: calc(100vh - 50px - 50px - 80px);
   height: 100%;
   width: 100%;
   position: relative;
+  display: flex;
 }
 
 .react-calendar {
@@ -24,11 +26,10 @@
 
 /* 핵심: 날짜 셀 영역 높이를 직접 계산 */
 .react-calendar__month-view__days {
-  height: calc(100vh - 56px - 60px - 50px);
-  display: grid !important;
-  grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(6, 1fr);
+  display: flex;
+  height: 180px;
 }
+
 .react-calendar__tile {
   display: flex;
   flex-direction: column;
@@ -78,4 +79,13 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   z-index: 10;
+}
+
+.has-diary {
+  background-color: #d7f5d7;
+  border-radius: 8px;
+}
+
+.react-calendar__tile--active.has-diary {
+  background-color: #a6e3a1;
 }
