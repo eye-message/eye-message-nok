@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../styles/signup.css";
 import "../styles/signup.css";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ const Signup = () => {
   });
 
   const [validationErrors, setValidationErrors] = useState({});
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -65,6 +67,12 @@ const Signup = () => {
       ...formData,
       patientId: generatedPatientId,
     });
+
+    // 성공 후 페이지 이동
+    setTimeout(() => {
+      navigate("/notification"); // React Router 사용 시
+      alert("카카오 로그인 성공! 회원정보 입력 페이지로 이동합니다.");
+    }, 1000);
   };
 
   return (
