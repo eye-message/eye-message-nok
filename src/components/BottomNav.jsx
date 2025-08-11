@@ -15,6 +15,7 @@ const BottomNav = () => {
     { to: "/notification", icon: <MdNotifications size={24} /> }, // 알림
     { to: "/board", icon: <MdForum size={24} /> }, // 게시판
     { to: "/add", icon: <MdAddCircle size={32} /> }, // 추가
+    { to: "/list", icon: <MdAddCircle size={32} /> }, // 추가
     { to: "/calendar", icon: <MdCalendarToday size={24} /> }, //캘린더
     { to: "/settings", icon: <MdSettings size={24} /> }, //설정
   ];
