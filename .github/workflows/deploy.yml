@@ -15,7 +15,7 @@ jobs:
 
     env:
       # 👇 여기만 바꾸면 대상 디렉토리 선택 가능 (patient 또는 caregiver 등)
-      S3_PREFIX: patient
+      S3_PREFIX: guardian
       S3_BUCKET: ${{ secrets.S3_BUCKET }}
       CF_DISTRIBUTION_ID: ${{ secrets.GUR_CF_DISTRIBUTION_ID }}
 
