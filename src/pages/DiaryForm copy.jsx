@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import "../styles/CalendarDiary.css";
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import '../styles/DiaryForm.css';
 
-function CalendarDiary() {
+function DiaryForm() {
   const location = useLocation();
   const navigate = useNavigate();
 
   // 선택한 날짜
-  const selectedDate = location.state?.selectedDate
+  const diaryDate = location.state?.selectedDate
     ? new Date(location.state.selectedDate)
     : new Date();
-  const mode = location.state?.mode || "create";
-  const dateKey = selectedDate.toISOString().split("T")[0];
+  const mode = location.state?.mode || 'create';
+  const dateKey = diaryDate.toISOString().split('T')[0];
 
   // 상태값 목록
-  const STATUS_OPTIONS = ["좋음", "보통", "나쁨"];
+  const STATUS_OPTIONS = ['좋음', '보통', '나쁨'];
 
-  const [status, setStatus] = useState("");
-  const [content, setContent] = useState("");
+  const [status, setStatus] = useState('');
+  const [content, setContent] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const [showStatusWarning, setShowStatusWarning] = useState(false);
@@ -25,20 +25,20 @@ function CalendarDiary() {
   // 수정 모드일 때 기존 데이터 불러오기
   // [임시] 로컬스토리지 사용 (추후 DB 연동 시 삭제 예정)
   useEffect(() => {
-    if (mode === "edit") {
-      const diaries = JSON.parse(localStorage.getItem("diaries") || "{}");
+    if (mode === 'edit') {
+      const diaries = JSON.parse(localStorage.getItem('diaries') || '{}');
       const entry = diaries[dateKey];
       if (entry) {
-        setStatus(entry.status || "");
-        setContent(entry.content || "");
+        setStatus(entry.status || '');
+        setContent(entry.content || '');
       }
     }
   }, [mode, dateKey]);
 
   // 날짜 포맷
   const formatDate = (date) => {
-    const options = { month: "2-digit", day: "2-digit", weekday: "short" };
-    return date.toLocaleDateString("ko-KR", options).replace(/\./g, "");
+    const options = { month: '2-digit', day: '2-digit', weekday: 'short' };
+    return date.toLocaleDateString('ko-KR', options).replace(/\./g, '');
   };
 
   // 일지 등록/수정
@@ -49,15 +49,15 @@ function CalendarDiary() {
       return;
     }
 
-    const diaries = JSON.parse(localStorage.getItem("diaries") || "{}");
+    const diaries = JSON.parse(localStorage.getItem('diaries') || '{}');
     diaries[dateKey] = {
       date: dateKey,
       status,
       content,
     };
-    localStorage.setItem("diaries", JSON.stringify(diaries));
-    alert("일지가 저장되었습니다.");
-    navigate("/calendar");
+    localStorage.setItem('diaries', JSON.stringify(diaries));
+    alert('일지가 저장되었습니다.');
+    navigate('/diary');
   };
 
   // 삭제 확인창 열기
@@ -68,17 +68,17 @@ function CalendarDiary() {
   // 일지 삭제
   // [임시] 로컬스토리지 사용 (추후 DB 연동 시 삭제 예정)
   const handleDelete = () => {
-    const diaries = JSON.parse(localStorage.getItem("diaries") || "{}");
+    const diaries = JSON.parse(localStorage.getItem('diaries') || '{}');
     delete diaries[dateKey];
-    localStorage.setItem("diaries", JSON.stringify(diaries));
-    alert("일지가 삭제되었습니다.");
-    navigate("/calendar");
+    localStorage.setItem('diaries', JSON.stringify(diaries));
+    alert('일지가 삭제되었습니다.');
+    navigate('/diary');
   };
 
   return (
     <div className="diary-wrapper">
       {/* 날짜 표시 */}
-      <div className="diary-date">{formatDate(selectedDate)}</div>
+      <div className="diary-date">{formatDate(diaryDate)}</div>
 
       <div className="diary-section">
         {/* 상태 선택 */}
@@ -86,11 +86,11 @@ function CalendarDiary() {
         <div className="status-options">
           {STATUS_OPTIONS.map((label) => {
             const badgeClass =
-              label === "좋음"
-                ? "good"
-                : label === "보통"
-                ? "normal"
-                : "danger";
+              label === '좋음'
+                ? 'good'
+                : label === '보통'
+                ? 'normal'
+                : 'danger';
             return (
               <label key={label} className="status-option">
                 <input
@@ -126,9 +126,9 @@ function CalendarDiary() {
 
         <div className="diary-buttons">
           <button className="btn-register" onClick={handleRegister}>
-            {mode === "edit" ? "수정" : "등록"}
+            {mode === 'edit' ? '수정' : '등록'}
           </button>
-          {mode === "edit" && (
+          {mode === 'edit' && (
             <button className="btn-delete" onClick={handleDeleteConfirm}>
               삭제
             </button>
@@ -158,4 +158,4 @@ function CalendarDiary() {
   );
 }
 
-export default CalendarDiary;
+export default DiaryForm;

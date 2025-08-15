@@ -1,5 +1,4 @@
 .calendar-wrapper {
-  height: calc(100vh - 50px - 50px - 80px);
   height: 100%;
   width: 100%;
   position: relative;
@@ -21,13 +20,12 @@
 }
 
 .react-calendar__navigation__label {
-  font-size: 30px;
+  font-size: 24px;
 }
 
 /* 핵심: 날짜 셀 영역 높이를 직접 계산 */
 .react-calendar__month-view__days {
-  display: flex;
-  height: 180px;
+  height: 100px;
 }
 
 .react-calendar__tile {
@@ -42,9 +40,8 @@
 
 /* 날짜 숫자 */
 .react-calendar__tile abbr {
-  font-size: 16px;
   font-weight: 500;
-  margin-bottom: 4px; /* 아래 요소와 공간 확보 */
+  /* margin-bottom: 4px; */
 }
 
 /* 요일명 (월, 화, 수, ...) 크기 키우기 */
@@ -66,9 +63,16 @@
   height: 80px;
 }
 
+.diary-calendar-wrapper {
+  position: relative; /* 버튼 위치 기준 요소로 지정 */
+  height: 100%;
+  width: 100%;
+}
+
+/* 오늘 버튼 */
 .today-button {
-  position: absolute;
-  bottom: 80px;
+  position: fixed; /* ✅ 화면 기준 고정 */
+  bottom: 80px; /* ⬆ 하단 네비게이션 높이 고려 */
   right: 16px;
   padding: 8px 14px;
   font-size: 14px;
@@ -78,7 +82,7 @@
   color: #333;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  z-index: 10;
+  z-index: 100; /* ✅ 버튼이 다른 UI 위로 올라오게 */
 }
 
 .has-diary {
@@ -88,4 +92,30 @@
 
 .react-calendar__tile--active.has-diary {
   background-color: #a6e3a1;
+}
+
+/* 🔷 헤더바 (상단 고정) */
+.calendar-header {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  padding: 12px 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  z-index: 10;
+  height: 30px;
+}
+
+/* 모든 화살표 버튼에 적용 */
+.react-calendar__navigation__arrow {
+  font-size: 24px; /* 텍스트 크기 */
+}
+
+/* 🔘 + 버튼 */
+.add-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
