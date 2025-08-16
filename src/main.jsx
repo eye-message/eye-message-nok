@@ -13,6 +13,7 @@ import MessageList from './pages/MessageList';
 import DiaryCalendar from './pages/DiaryCalendar';
 import DiaryMain from './pages/DiaryMain';
 import DiaryForm from './pages/DiaryForm';
+import DiaryDetail from './pages/DiaryDetail';
 
 import './styles/App.css';
 
@@ -30,8 +31,8 @@ const App = () => {
           <Route path="/add" element={<MessageAddForm />} />
           <Route path="/diary" element={<DiaryMain />}>
             <Route index element={<DiaryCalendar />} />
-
             <Route path="form" element={<DiaryForm />} />
+            <Route path="detail" element={<DiaryDetail />} />
           </Route>
           <Route path="/settings" element={<Settings />} />
         </Route>

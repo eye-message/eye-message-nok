@@ -4,7 +4,7 @@ import axios from 'axios';
 import '../styles/DiaryForm.css';
 import { parseLocalDate, formatLocalDate } from '../utils/date';
 
-function DiaryForm() {
+function DiaryDetail() {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -14,73 +14,34 @@ function DiaryForm() {
       : location.state.selectedDate
     : new Date();
 
-  const mode = location.state?.mode || 'create';
   const diaryId = location.state?.diaryId || null;
 
   const STATUS_OPTIONS = ['좋음', '보통', '나쁨'];
   const [status, setStatus] = useState('');
   const [content, setContent] = useState('');
-
-  // 원본 저장용
-  const [initialStatus, setInitialStatus] = useState('');
-  const [initialContent, setInitialContent] = useState('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
-    if (mode === 'edit' && diaryId) {
+    if (diaryId) {
       axios
         .get(`http://localhost:8080/api/diaries/${diaryId}`)
         .then((res) => {
           const entry = res.data;
           setStatus(entry.status || '');
           setContent(entry.textBody || '');
-          setInitialStatus(entry.status || '');
-          setInitialContent(entry.textBody || '');
         })
-        .catch((err) => console.error('일지 불러오기 실패:', err));
+        .catch((err) => console.error('다이어리 불러오기 실패:', err));
     }
-  }, [mode, diaryId]);
+  }, [diaryId]);
 
-  const handleSave = () => {
-    const payload = {
-      diaryId,
-      diaryDate: formatLocalDate(diaryDate),
-      status,
-      textBody: content,
-    };
-
-    console.log('payload: ', payload);
-    console.log('diaryDate: ', diaryDate);
-
-    if (mode === 'edit') {
-      const url = `http://localhost:8080/api/diaries/${diaryId}`;
-
-      axios
-        .put(url, payload)
-        .then(() => {
-          alert('일지가 수정되었습니다.');
-          navigate('/diary/detail', {
-            state: { selectedDate: diaryDate, diaryId },
-          });
-        })
-        .catch(() => {
-          alert('수정 실패');
-        });
-    } else {
-      axios
-        .post('http://localhost:8080/api/diaries', payload)
-        .then(() => {
-          alert('일지가 저장되었습니다.');
-          navigate('/diary');
-        })
-        .catch(() => {
-          alert('저장 실패');
-        });
-    }
-  };
-
-  const handleCancel = () => {
-    setStatus(initialStatus);
-    setContent(initialContent);
+  const handleDelete = () => {
+    axios
+      .delete(`http://localhost:8080/api/diaries/${diaryId}`)
+      .then(() => {
+        alert('일지가 삭제되었습니다.');
+        navigate('/diary');
+      })
+      .catch((err) => console.error('일지 삭제 실패:', err));
   };
 
   return (
@@ -104,7 +65,7 @@ function DiaryForm() {
                   name="status"
                   value={label}
                   checked={status === label}
-                  onChange={(e) => setStatus(e.target.value)}
+                  readOnly
                 />
                 <span className={`status-badge ${badgeClass}`}>{label}</span>
               </label>
@@ -116,22 +77,49 @@ function DiaryForm() {
         <textarea
           className="diary-textarea"
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          readOnly
         ></textarea>
 
         <div className="diary-buttons">
-          <button className="btn-save" onClick={handleSave}>
-            {mode === 'edit' ? '수정 완료' : '등록'}
+          <button
+            className="btn-save"
+            onClick={() =>
+              navigate('/diary/form', {
+                state: { selectedDate: diaryDate, mode: 'edit', diaryId },
+              })
+            }
+          >
+            수정
           </button>
-          {mode === 'edit' && (
-            <button className="btn-cancel" onClick={handleCancel}>
-              취소
-            </button>
-          )}
+          <button
+            className="btn-delete"
+            onClick={() => setShowDeleteConfirm(true)}
+          >
+            삭제
+          </button>
         </div>
       </div>
+
+      {showDeleteConfirm && (
+        <div className="modal-backdrop">
+          <div className="modal">
+            <p>정말 삭제하시겠습니까?</p>
+            <div className="modal-buttons">
+              <button className="btn-yes" onClick={handleDelete}>
+                예
+              </button>
+              <button
+                className="btn-no"
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                아니오
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-export default DiaryForm;
+export default DiaryDetail;
