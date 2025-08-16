@@ -1,157 +1,212 @@
-.diary-wrapper {
+/* 전체 */
+.diary-form-wrapper {
+  max-width: 375px;
+  margin: 0 auto;
+  background-color: #f5f6f7;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 헤더 */
+.form-header {
+  background-color: white;
+  padding: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background-color: #fcfcfc;
-  font-family: sans-serif;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #e0e0e0;
+  height: 56px;
+}
+
+.back-button {
+  position: absolute;
+  left: 20px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 24px;
+  line-height: 1;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.back-button svg {
+  width: 26px;
+  height: 26px;
+  color: #333;
+  transition: color 0.2s ease;
+}
+
+.back-button:hover svg {
+  color: #4caf50;
 }
 
 .diary-date {
-  text-align: center;
-  padding: 16px;
-  background-color: #f2f2f2;
   font-size: 18px;
-  font-weight: bold;
+  font-weight: 700;
+  color: #2c3e50;
 }
 
-.diary-section {
-  flex: 1;
-  padding: 20px;
+/* 본문 */
+.form-wrapper {
+  padding: 24px 20px;
 }
 
 .diary-label {
   margin-bottom: 8px;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #2c3e50;
 }
 
-/* 상태 선택 영역 */
+/* 상태 */
 .status-options {
   display: flex;
   gap: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 20px;
 }
 
-/* 라디오 + 배지 묶음 */
 .status-option {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-/* 상태 배지 공통 스타일 */
 .status-badge {
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 13px;
+  min-width: 45px;
+  text-align: center;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 14px;
   font-weight: 600;
+  display: inline-block;
   border: 1px solid transparent;
+  white-space: nowrap;
 }
 
-/* 상태별 색상 */
 .good {
-  background-color: #b2f2bb;
-  color: #2b8a3e;
+  background-color: #d0f0c0;
+  color: #1b5e20;
 }
 
 .normal {
-  background-color: #fff3bf;
-  color: #f08c00;
+  background-color: #fff8e1;
+  color: #ff9800;
 }
 
 .danger {
-  background-color: #ffa8a8;
-  color: #c92a2a;
+  background-color: #ffebee;
+  color: #b71c1c;
 }
 
-/* 선택된 상태 강조 */
 .status-option input:checked + .status-badge {
   border-color: rgba(0, 0, 0, 0.2);
 }
 
-/* 상태 미선택 경고문구 */
-.status-warning {
-  color: #e74c3c;
-  font-size: 13px;
-  margin-bottom: 12px;
-}
-
+/* 내용 입력 */
 .diary-textarea {
   width: 100%;
-  height: 250px;
+  height: 180px;
   font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
   resize: none;
-  background-color: #f5f5f5;
-  margin-bottom: 20px;
+  background-color: #f8f9fa;
+  padding: 12px;
+  color: #333;
+  margin-bottom: 24px;
+  box-sizing: border-box;
 }
 
-.diary-buttons {
+/* 버튼 */
+.form-buttons {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 10px;
 }
 
+.form-buttons button {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
 .btn-save {
-  background-color: #3478f6;
+  background-color: #4caf50;
   color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 20px;
-  cursor: pointer;
+}
+.btn-save:hover {
+  background-color: #45a049;
 }
 
-.btn-delete {
-  background-color: #e74c3c;
+.btn-cancel {
+  background-color: #9e9e9e;
   color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 20px;
-  cursor: pointer;
+}
+.btn-cancel:hover {
+  background-color: #7e7e7e;
 }
 
-/* 삭제 팝업 */
+/* 모달 */
 .modal-backdrop {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 1000;
+  align-items: center;
+  z-index: 100;
 }
 
 .modal {
   background: white;
-  padding: 20px;
-  border-radius: 8px;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   text-align: center;
-  width: 240px;
+  width: 80%;
+  max-width: 320px;
+}
+
+.modal p {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #2c3e50;
 }
 
 .modal-buttons {
   display: flex;
-  justify-content: space-around;
-  margin-top: 15px;
+  gap: 10px;
 }
 
-.btn-yes,
-.btn-no {
-  padding: 6px 12px;
+.modal-buttons .btn-yes,
+.modal-buttons .btn-no {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 600;
   border: none;
-  border-radius: 4px;
+  border-radius: 20px;
   cursor: pointer;
 }
 
-.btn-yes {
-  background-color: #e74c3c;
+.modal-buttons .btn-yes {
+  background-color: #f44336;
   color: white;
 }
 
-.btn-no {
-  background-color: #bdc3c7;
-  color: black;
+.modal-buttons .btn-no {
+  background-color: #9e9e9e;
+  color: white;
 }

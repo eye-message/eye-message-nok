@@ -1,73 +1,184 @@
+/* 전체 */
 .diary-detail-wrapper {
-  max-width: 600px;
+  max-width: 375px;
   margin: 0 auto;
+  background-color: #f5f6f7;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 헤더 */
+.detail-header {
+  background-color: white;
   padding: 20px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #e0e0e0;
+  height: 56px;
+}
+
+.back-button {
+  position: absolute;
+  left: 20px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 24px;
+  line-height: 1;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.back-button svg {
+  width: 26px;
+  height: 26px;
+  color: #333;
+  transition: color 0.2s ease;
+}
+
+.back-button:hover svg {
+  color: #4caf50;
 }
 
 .diary-detail-date {
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
+  font-size: 18px;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+/* 본문 */
+.detail-wrapper {
+  padding: 24px 20px;
 }
 
 .diary-detail-status {
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 12px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  background: #f5f5f5;
   display: inline-block;
-}
-
-.diary-detail-content {
-  font-size: 15px;
-  line-height: 1.6;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  min-height: 120px;
-  background: #fafafa;
-  white-space: pre-line; /* 줄바꿈 유지 */
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
   margin-bottom: 20px;
 }
 
+.diary-detail-status.good {
+  background-color: #d0f0c0;
+  color: #1b5e20;
+}
+
+.diary-detail-status.normal {
+  background-color: #fff8e1;
+  color: #ff9800;
+}
+
+.diary-detail-status.bad {
+  background-color: #ffebee;
+  color: #b71c1c;
+}
+
+.diary-detail-content {
+  white-space: pre-line;
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  min-height: 140px;
+}
+
+/* 버튼 */
 .diary-detail-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 24px;
+  gap: 10px;
 }
 
 .diary-detail-buttons .btn-edit,
 .diary-detail-buttons .btn-delete {
   flex: 1;
-  padding: 12px;
-  margin: 0 5px;
+  padding: 12px 0;
+  font-size: 14px;
+  font-weight: 600;
   border: none;
-  border-radius: 8px;
+  border-radius: 20px;
   cursor: pointer;
-  font-size: 15px;
-  font-weight: bold;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
 }
 
 .btn-edit {
-  background: #4caf50;
-  color: #fff;
+  background-color: #4caf50;
+  color: white;
 }
 .btn-edit:hover {
-  background: #45a049;
+  background-color: #45a049;
 }
 
 .btn-delete {
-  background: #f44336;
-  color: #fff;
+  background-color: #f44336;
+  color: white;
 }
 .btn-delete:hover {
-  background: #d32f2f;
+  background-color: #d32f2f;
+}
+
+/* 모달 */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal {
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 80%;
+  max-width: 320px;
+}
+
+.modal p {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-buttons .btn-yes,
+.modal-buttons .btn-no {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.modal-buttons .btn-yes {
+  background-color: #f44336;
+  color: white;
+}
+
+.modal-buttons .btn-no {
+  background-color: #9e9e9e;
+  color: white;
 }

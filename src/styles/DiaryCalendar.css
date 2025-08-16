@@ -1,121 +1,205 @@
-.calendar-wrapper {
-  height: 100%;
-  width: 100%;
-  position: relative;
+/* 캘린더 전체 영역 */
+.diary-calendar-wrapper {
+  max-width: 375px;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 헤더 */
+.calendar-header {
+  padding: 0;
+  background: white;
+  border-bottom: 1px solid #e9ecef;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-top {
+  padding: 16px 20px;
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.board-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+/* 버튼 */
+.add-button {
+  background-color: #4caf50;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.add-button:hover {
+  background-color: #45a049;
+}
+
+.today-button {
+  width: 100%;
+  background-color: white;
+  color: #4caf50;
+  border: 2px solid #4caf50;
+  border-radius: 20px;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.today-button:hover {
+  background-color: #4caf50;
+  color: white;
+}
+
+/* 달력 구조 */
+.calendar-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 440px;
+  justify-content: flex-start;
 }
 
 .react-calendar {
-  width: 100% !important;
-  height: 100% !important;
-  display: flex;
-  flex-direction: column;
   border: none;
-}
-
-/* navigation은 고정 높이 */
-.react-calendar__navigation {
-  height: 80px;
-  flex-shrink: 0;
-}
-
-.react-calendar__navigation__label {
-  font-size: 24px;
-}
-
-/* 핵심: 날짜 셀 영역 높이를 직접 계산 */
-.react-calendar__month-view__days {
-  height: 100px;
-}
-
-.react-calendar__tile {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 6px;
-  box-sizing: border-box;
-  height: 100%;
-}
-
-/* 날짜 숫자 */
-.react-calendar__tile abbr {
-  font-weight: 500;
-  /* margin-bottom: 4px; */
-}
-
-/* 요일명 (월, 화, 수, ...) 크기 키우기 */
-.react-calendar__month-view__weekdays__weekday abbr {
-  font-size: 20px;
-  font-weight: 600;
-  color: #444;
-  text-decoration: none; /* 밑줄 제거 */
-}
-
-/* 요일 가운데 정렬 (선택) */
-.react-calendar__month-view__weekdays__weekday {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.react-calendar__navigation {
-  height: 80px;
-}
-
-.diary-calendar-wrapper {
-  position: relative; /* 버튼 위치 기준 요소로 지정 */
-  height: 100%;
   width: 100%;
+  background-color: transparent;
+  font-size: 13px;
+  flex-grow: 1;
 }
 
-/* 오늘 버튼 */
-.today-button {
-  position: fixed; /* ✅ 화면 기준 고정 */
-  bottom: 80px; /* ⬆ 하단 네비게이션 높이 고려 */
-  right: 16px;
-  padding: 8px 14px;
-  font-size: 14px;
-  border-radius: 20px;
-  background-color: #f2f2f2;
-  border: none;
-  color: #333;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  z-index: 100; /* ✅ 버튼이 다른 UI 위로 올라오게 */
-}
-
-.has-diary {
-  background-color: #d7f5d7;
-  border-radius: 8px;
-}
-
-.react-calendar__tile--active.has-diary {
-  background-color: #a6e3a1;
-}
-
-/* 🔷 헤더바 (상단 고정) */
-.calendar-header {
-  position: sticky;
-  top: 0;
-  background-color: #fff;
-  padding: 12px 20px;
-  border-bottom: 1px solid #eee;
+.react-calendar__navigation {
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  z-index: 10;
-  height: 30px;
+  justify-content: space-between;
+  margin-bottom: 8px;
 }
 
-/* 모든 화살표 버튼에 적용 */
-.react-calendar__navigation__arrow {
-  font-size: 24px; /* 텍스트 크기 */
-}
-
-/* 🔘 + 버튼 */
-.add-button {
-  background: transparent;
+.react-calendar__navigation button {
+  background: none;
   border: none;
-  cursor: pointer;
+  font-weight: 600;
+  font-size: 18px;
+  color: #2c3e50;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.react-calendar__navigation button:hover {
+  background-color: #e9ecef;
+}
+
+/* 요일 */
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  color: #6c757d;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+/* 셀 */
+.react-calendar__tile {
+  height: 80px;
+  padding-top: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: relative;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+  font-size: 13px;
+}
+
+/* 오늘 날짜 기본 스타일: 배경 없음 + 초록 테두리 */
+.react-calendar__tile--now {
+  border: 3px solid #4caf50;
+  border-radius: 8px;
+  background: none !important;
+  color: inherit; /* 텍스트 컬러 유지 */
+}
+
+/* 오늘 날짜 + 상태별 배경색 + 초록 테두리 유지 */
+.react-calendar__tile--now.status-good {
+  background-color: #d0f0c0 !important;
+  color: #1b5e20;
+  border: 3px solid #4caf50;
+}
+
+.react-calendar__tile--now.status-normal {
+  background-color: #fff8e1 !important;
+  color: #ff9800;
+  border: 3px solid #4caf50;
+}
+
+.react-calendar__tile--now.status-bad {
+  background-color: #ffebee !important;
+  color: #b71c1c;
+  border: 3px solid #4caf50;
+}
+
+.react-calendar__tile:hover {
+  background-color: #e9ecef;
+}
+
+.react-calendar__tile.status-good:hover,
+.react-calendar__tile.status-normal:hover,
+.react-calendar__tile.status-bad:hover {
+  background-color: inherit;
+}
+
+.react-calendar__tile--active {
+  background-color: #4caf50;
+  color: white;
+}
+
+/* 셀 상태 */
+.status-good {
+  background-color: #d0f0c0;
+  color: #1b5e20;
+}
+
+.status-normal {
+  background-color: #fff8e1;
+  color: #ff9800;
+}
+
+.status-bad {
+  background-color: #ffebee;
+  color: #b71c1c;
+}
+
+/* 이모지 */
+.emoji {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.emoji.good,
+.emoji.normal,
+.emoji.bad {
+  background-color: transparent !important;
+}
+
+.emoji svg {
+  background: none !important;
 }

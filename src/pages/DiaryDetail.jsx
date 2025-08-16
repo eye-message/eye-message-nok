@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { FiArrowLeft } from 'react-icons/fi';
 import axios from 'axios';
-import '../styles/DiaryForm.css';
+import '../styles/DiaryDetail.css';
 import { parseLocalDate, formatLocalDate } from '../utils/date';
 
 function DiaryDetail() {
@@ -16,7 +17,6 @@ function DiaryDetail() {
 
   const diaryId = location.state?.diaryId || null;
 
-  const STATUS_OPTIONS = ['좋음', '보통', '나쁨'];
   const [status, setStatus] = useState('');
   const [content, setContent] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -45,44 +45,30 @@ function DiaryDetail() {
   };
 
   return (
-    <div className="diary-wrapper">
-      <div className="diary-date">{formatLocalDate(diaryDate)}</div>
+    <div className="diary-detail-wrapper">
+      {/* 헤더 */}
+      <div className="detail-header">
+        <button className="back-button" onClick={() => navigate('/diary')}>
+          <FiArrowLeft />
+        </button>
+        <div className="diary-detail-date">{formatLocalDate(diaryDate)}</div>
+      </div>
 
-      <div className="diary-section">
-        <div className="diary-label">오늘 상태는</div>
-        <div className="status-options">
-          {STATUS_OPTIONS.map((label) => {
-            const badgeClass =
-              label === '좋음'
-                ? 'good'
-                : label === '보통'
-                ? 'normal'
-                : 'danger';
-            return (
-              <label key={label} className="status-option">
-                <input
-                  type="radio"
-                  name="status"
-                  value={label}
-                  checked={status === label}
-                  readOnly
-                />
-                <span className={`status-badge ${badgeClass}`}>{label}</span>
-              </label>
-            );
-          })}
+      {/* 본문 */}
+      <main className="detail-wrapper">
+        <div
+          className={`diary-detail-status ${
+            status === '좋음' ? 'good' : status === '보통' ? 'normal' : 'bad'
+          }`}
+        >
+          {status}
         </div>
 
-        <div className="diary-label">내용</div>
-        <textarea
-          className="diary-textarea"
-          value={content}
-          readOnly
-        ></textarea>
+        <div className="diary-detail-content">{content}</div>
 
-        <div className="diary-buttons">
+        <div className="diary-detail-buttons">
           <button
-            className="btn-save"
+            className="btn-edit"
             onClick={() =>
               navigate('/diary/form', {
                 state: { selectedDate: diaryDate, mode: 'edit', diaryId },
@@ -98,8 +84,9 @@ function DiaryDetail() {
             삭제
           </button>
         </div>
-      </div>
+      </main>
 
+      {/* 모달 */}
       {showDeleteConfirm && (
         <div className="modal-backdrop">
           <div className="modal">

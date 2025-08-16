@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
-import { FiPlusCircle } from 'react-icons/fi';
+import { FaSmile, FaMeh, FaFrown } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'react-calendar/dist/Calendar.css';
@@ -11,7 +11,7 @@ function DiaryCalendar() {
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeStartDate, setActiveStartDate] = useState(new Date());
-  const [writtenDiaryDates, setWrittenDiaryDates] = useState([]);
+  const [writtenDiaryMap, setWrittenDiaryMap] = useState({}); // dateKey → status
 
   useEffect(() => {
     axios
@@ -23,11 +23,13 @@ function DiaryCalendar() {
           ? res.data.data
           : [];
 
-        const dates = list.map((entry) =>
-          formatLocalDate(parseLocalDate(entry.diaryDate))
-        );
+        const map = {};
+        list.forEach((entry) => {
+          const dateKey = formatLocalDate(parseLocalDate(entry.diaryDate));
+          map[dateKey] = entry.status; // "좋음", "보통", "나쁨"
+        });
 
-        setWrittenDiaryDates(dates);
+        setWrittenDiaryMap(map);
       })
       .catch((err) => {
         console.error('다이어리 목록 조회 실패:', err);
@@ -53,11 +55,10 @@ function DiaryCalendar() {
   };
 
   const handleDateClick = async (date) => {
-    const dateKey = formatLocalDate(date); // YYYY-MM-DD 문자열로 변환
+    const dateKey = formatLocalDate(date);
     setSelectedDate(date);
 
-    if (writtenDiaryDates.includes(dateKey)) {
-      // 이미 작성된 일지 → 상세 보기로 이동
+    if (writtenDiaryMap[dateKey]) {
       try {
         const res = await axios.get('http://localhost:8080/api/diaries/check', {
           params: { date: dateKey },
@@ -82,9 +83,12 @@ function DiaryCalendar() {
   return (
     <div className="diary-calendar-wrapper">
       <div className="calendar-header">
-        <button className="add-button" onClick={handleAddClick}>
-          <FiPlusCircle size={24} />
-        </button>
+        <div className="header-top">
+          <div className="board-title">다이어리</div>
+          <button className="add-button" onClick={handleAddClick}>
+            일지 쓰기
+          </button>
+        </div>
       </div>
 
       <div className="calendar-wrapper">
@@ -102,9 +106,20 @@ function DiaryCalendar() {
           tileClassName={({ date, view }) => {
             if (view === 'month') {
               const dateKey = formatLocalDate(date);
-              if (writtenDiaryDates.includes(dateKey)) {
-                return 'has-diary';
-              }
+              const status = writtenDiaryMap[dateKey];
+              if (status === '좋음') return 'status-good';
+              if (status === '보통') return 'status-normal';
+              if (status === '나쁨') return 'status-bad';
+            }
+            return null;
+          }}
+          tileContent={({ date, view }) => {
+            if (view === 'month') {
+              const dateKey = formatLocalDate(date);
+              const status = writtenDiaryMap[dateKey];
+              if (status === '좋음') return <FaSmile className="emoji good" />;
+              if (status === '보통') return <FaMeh className="emoji normal" />;
+              if (status === '나쁨') return <FaFrown className="emoji bad" />;
             }
             return null;
           }}

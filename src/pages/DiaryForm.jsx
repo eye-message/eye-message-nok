@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { FiArrowLeft } from 'react-icons/fi';
 import axios from 'axios';
 import '../styles/DiaryForm.css';
 import { parseLocalDate, formatLocalDate } from '../utils/date';
@@ -20,10 +21,9 @@ function DiaryForm() {
   const STATUS_OPTIONS = ['좋음', '보통', '나쁨'];
   const [status, setStatus] = useState('');
   const [content, setContent] = useState('');
-
-  // 원본 저장용
   const [initialStatus, setInitialStatus] = useState('');
   const [initialContent, setInitialContent] = useState('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     if (mode === 'edit' && diaryId) {
@@ -48,23 +48,16 @@ function DiaryForm() {
       textBody: content,
     };
 
-    console.log('payload: ', payload);
-    console.log('diaryDate: ', diaryDate);
-
     if (mode === 'edit') {
-      const url = `http://localhost:8080/api/diaries/${diaryId}`;
-
       axios
-        .put(url, payload)
+        .put(`http://localhost:8080/api/diaries/${diaryId}`, payload)
         .then(() => {
           alert('일지가 수정되었습니다.');
           navigate('/diary/detail', {
             state: { selectedDate: diaryDate, diaryId },
           });
         })
-        .catch(() => {
-          alert('수정 실패');
-        });
+        .catch(() => alert('수정 실패'));
     } else {
       axios
         .post('http://localhost:8080/api/diaries', payload)
@@ -72,9 +65,7 @@ function DiaryForm() {
           alert('일지가 저장되었습니다.');
           navigate('/diary');
         })
-        .catch(() => {
-          alert('저장 실패');
-        });
+        .catch(() => alert('저장 실패'));
     }
   };
 
@@ -84,10 +75,17 @@ function DiaryForm() {
   };
 
   return (
-    <div className="diary-wrapper">
-      <div className="diary-date">{formatLocalDate(diaryDate)}</div>
+    <div className="diary-form-wrapper">
+      {/* 헤더 */}
+      <div className="form-header">
+        <button className="back-button" onClick={() => navigate('/diary')}>
+          <FiArrowLeft />
+        </button>
+        <div className="diary-date">{formatLocalDate(diaryDate)}</div>
+      </div>
 
-      <div className="diary-section">
+      {/* 본문 */}
+      <div className="form-wrapper">
         <div className="diary-label">오늘 상태는</div>
         <div className="status-options">
           {STATUS_OPTIONS.map((label) => {
@@ -117,9 +115,9 @@ function DiaryForm() {
           className="diary-textarea"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-        ></textarea>
+        />
 
-        <div className="diary-buttons">
+        <div className="form-buttons">
           <button className="btn-save" onClick={handleSave}>
             {mode === 'edit' ? '수정 완료' : '등록'}
           </button>
@@ -130,6 +128,26 @@ function DiaryForm() {
           )}
         </div>
       </div>
+
+      {/* 삭제 모달 */}
+      {showDeleteConfirm && (
+        <div className="modal-backdrop">
+          <div className="modal">
+            <p>정말 삭제하시겠습니까?</p>
+            <div className="modal-buttons">
+              <button className="btn-yes" onClick={handleDelete}>
+                예
+              </button>
+              <button
+                className="btn-no"
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                아니오
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
