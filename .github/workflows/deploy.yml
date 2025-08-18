@@ -31,6 +31,10 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: Create env file For Inject .env values
+        run: |
+          echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
+
       - name: Build (Vite)
         run: npm run build
 
