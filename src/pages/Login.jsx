@@ -8,29 +8,35 @@ const Login = () => {
   const [loginSuccess, setLoginSuccess] = useState(false);
   const navigate = useNavigate();
 
-  const handleKakaoLogin = async () => {
-    setIsLoading(true);
-
-    try {
-      // prod: 실제 카카오 로그인 로직
-      // const response = await kakaoLogin();
-
-      // test: 시뮬레이션
-      setTimeout(() => {
-        setLoginSuccess(true);
-        setIsLoading(false);
-
-        // 성공 후 페이지 이동
-        setTimeout(() => {
-          navigate('/signup'); // React Router 사용 시
-          alert('카카오 로그인 성공! 회원정보 입력 페이지로 이동합니다.');
-        }, 1000);
-      }, 2000);
-    } catch (error) {
-      setIsLoading(false);
-      alert('로그인에 실패했습니다. 다시 시도해주세요.');
-    }
+  const handleKakaoLogin = () => {
+    window.location.href = `${
+      import.meta.env.VITE_API_URL
+    }/oauth2/authorization/kakao`;
   };
+
+  // const handleKakaoLogin = async () => {
+  //   setIsLoading(true);
+
+  //   try {
+  //     // prod: 실제 카카오 로그인 로직
+  //     // const response = await kakaoLogin();
+
+  //     // test: 시뮬레이션
+  //     setTimeout(() => {
+  //       setLoginSuccess(true);
+  //       setIsLoading(false);
+
+  //       // 성공 후 페이지 이동
+  //       setTimeout(() => {
+  //         navigate("/signup"); // React Router 사용 시
+  //         alert("카카오 로그인 성공! 회원정보 입력 페이지로 이동합니다.");
+  //       }, 1000);
+  //     }, 2000);
+  //   } catch (error) {
+  //     setIsLoading(false);
+  //     alert("로그인에 실패했습니다. 다시 시도해주세요.");
+  //   }
+  // };
 
   return (
     <div className="login-container">
