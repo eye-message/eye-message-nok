@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/signup.css";
 import "../styles/signup.css";
 import { useNavigate } from "react-router-dom";
@@ -74,6 +74,29 @@ const Signup = () => {
       alert("카카오 로그인 성공! 회원정보 입력 페이지로 이동합니다.");
     }, 1000);
   };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
+          credentials: "include", // 세션 쿠키 포함
+        });
+
+        console.log("서버로부터 받은 데이터", res);
+        if (res.ok) {
+          const data = await res.json();
+          console.log("로그인된 유저:", data);
+          // 회원가입 추가 입력 필요하면 form 보여주기
+        } else {
+          alert("로그인이 필요합니다.");
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   return (
     <div className="signup-container">
