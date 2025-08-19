@@ -10,10 +10,10 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import MessageAddForm from "./pages/MessageAddForm";
 import MessageList from "./pages/MessageList";
-import CalendarPage from "./pages/CalendarPage";
-import CalendarMain from "./pages/CalendarMain";
-import CalendarDiary from "./pages/CalendarDiary";
-import OAuthCallback from "./components/OAuthCallback";
+import DiaryCalendar from "./pages/DiaryCalendar";
+import DiaryMain from "./pages/DiaryMain";
+import DiaryForm from "./pages/DiaryForm";
+import DiaryDetail from "./pages/DiaryDetail";
 
 import "./styles/App.css";
 
@@ -30,9 +30,10 @@ const App = () => {
           <Route path="/board" element={<Board />} />
           <Route path="/list" element={<MessageList />} />
           <Route path="/add" element={<MessageAddForm />} />
-          <Route path="/calendar" element={<CalendarMain />}>
-            <Route index element={<CalendarPage />} />
-            <Route path="diary" element={<CalendarDiary />} />
+          <Route path="/diary" element={<DiaryMain />}>
+            <Route index element={<DiaryCalendar />} />
+            <Route path="form" element={<DiaryForm />} />
+            <Route path="detail" element={<DiaryDetail />} />
           </Route>
           <Route path="/settings" element={<Settings />} />
         </Route>
