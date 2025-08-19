@@ -1,6 +1,6 @@
 .board-container {
   width: 100%;
-  max-width: 375px;
+  max-width: 428px;
   margin: 0 auto;
   background: #f8f9fa;
   min-height: 100vh;
@@ -69,7 +69,7 @@
   margin-bottom: 16px;
   overflow: hidden;
   max-height: $ {
-    showsearchbar?'60px' : "0px";
+    showsearchbar?'60px': "0px";
   }
   transition: max-height 0.3s ease;
 }

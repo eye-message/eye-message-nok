@@ -76,4 +76,54 @@ const BOARD_DATA = [
   },
 ];
 
-export { BOARD_DATA };
+const MESSAGE_DATA = [
+  {
+    id: 1,
+    type: "emergency",
+    message: "즉시 확인이 필요합니다. 안전을 위해 연락주세요!",
+    timestamp: new Date(Date.now() - 30 * 60000).toISOString(),
+    isRead: false,
+    isConfirmed: false,
+  },
+  {
+    id: 2,
+    type: "normal",
+    message: "약 복용 시간입니다. 물과 함께 드세요.",
+    timestamp: new Date(Date.now() - 75 * 60000).toISOString(),
+    isRead: true,
+    isConfirmed: true,
+  },
+  {
+    id: 3,
+    type: "good",
+    message: "오늘 하루도 건강하게 보내세요! 항상 응원하고 있어요.",
+    timestamp: new Date(Date.now() - 3 * 3600000).toISOString(),
+    isRead: true,
+    isConfirmed: false,
+  },
+  {
+    id: 4,
+    type: "normal",
+    message: "건강 체크 시간이에요. 혈압을 측정해주세요.",
+    timestamp: new Date(Date.now() - 5 * 3600000).toISOString(),
+    isRead: false,
+    isConfirmed: false,
+  },
+  {
+    id: 5,
+    type: "good",
+    message: "컨디션이 좋아 보여서 기뻐요. 계속 잘 지내세요!",
+    timestamp: new Date(Date.now() - 8 * 3600000).toISOString(),
+    isRead: true,
+    isConfirmed: true,
+  },
+  {
+    id: 6,
+    type: "normal",
+    message: "오늘 날씨가 좋네요. 산책 한 번 다녀오시는 건 어떨까요?",
+    timestamp: new Date(Date.now() - 24 * 3600000).toISOString(),
+    isRead: true,
+    isConfirmed: false,
+  },
+];
+export { BOARD_DATA, MESSAGE_DATA };
