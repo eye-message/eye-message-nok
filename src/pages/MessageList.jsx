@@ -1,66 +1,142 @@
 import React, { useState, useRef, useEffect } from "react";
 import "../styles/messageList.css";
 import axios from "axios";
+import { API_URL } from "../constants/config";
+import { useNavigate } from "react-router-dom";
 
 const MessageList = () => {
-  // 샘플 메세지 데이터
   const [messages, setMessages] = useState([
     {
       id: 1,
-      content: "오늘 약 드셨나요? 건강이 최우선이에요!",
+      content: "물 좀 주세요.",
       isEditing: false,
+      alertCycle: 15,
+      status: "HIGH",
     },
     {
       id: 2,
-      content: "물을 충분히 마시고 있는지 확인해주세요.",
+      content: "간호사를 불러주세요.",
       isEditing: false,
+      alertCycle: 5,
+      status: "HIGH",
     },
     {
       id: 3,
-      content: "운동은 가볍게 산책부터 시작해보세요.",
+      content: "목에 가래가 끼었습니다. 도와주세요.",
       isEditing: false,
+      alertCycle: 10,
+      status: "HIGH",
     },
     {
       id: 4,
-      content: "식사는 거르지 마시고 규칙적으로 해주세요.",
+      content: "체위를 바꿔주세요.",
       isEditing: false,
+      alertCycle: 20,
+      status: "MEDIUM",
     },
     {
       id: 5,
-      content: "혈압 측정하셨나요? 기록도 잊지 마세요.",
+      content: "화장실에 가고 싶습니다.",
       isEditing: false,
+      alertCycle: 15,
+      status: "HIGH",
+    },
+    {
+      id: 6,
+      content: "TV 채널을 바꿔주세요.",
+      isEditing: false,
+      alertCycle: 60,
+      status: "LOW",
+    },
+    {
+      id: 7,
+      content: "조명이 너무 밝습니다. 줄여주세요.",
+      isEditing: false,
+      alertCycle: 45,
+      status: "LOW",
+    },
+    {
+      id: 8,
+      content: "추워요. 이불을 덮어주세요.",
+      isEditing: false,
+      alertCycle: 30,
+      status: "MEDIUM",
+    },
+    {
+      id: 9,
+      content: "더워요. 창문을 열어주세요.",
+      isEditing: false,
+      alertCycle: 30,
+      status: "MEDIUM",
+    },
+    {
+      id: 10,
+      content: "약 먹을 시간이에요.",
+      isEditing: false,
+      alertCycle: 120,
+      status: "HIGH",
     },
   ]);
 
   const [selectedItems, setSelectedItems] = useState(new Set());
   const [activeItemId, setActiveItemId] = useState(null);
   const [editingContent, setEditingContent] = useState("");
-
+  const [editingStatus, setEditingStatus] = useState("");
+  const [editingCycle, setEditingCycle] = useState("");
+  const [filterStatus, setFilterStatus] = useState("ALL");
+  const navigate = useNavigate();
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/dev/session/getUserInfo`, {
+      .get(`${API_URL}/api/v1/template/guardian/list`, {
         withCredentials: true,
-      })
-      .then((res) => {
-        return axios.get(
-          `${import.meta.env.VITE_API_URL}/api/v1/template/guardian/list`,
-          { withCredentials: true }
-        );
       })
       .then((res) => {
         const templates = res.data.data || [];
         const mapped = templates.map((item) => ({
           id: item.templateId,
-          content: item.message,
           status: item.status,
+          content: item.message,
+          alertCycle: item.alertCycle,
           isEditing: false,
         }));
-        setMessages(mapped);
+        setMessages([...messages, ...mapped]);
       })
       .catch((err) => {
         console.error("메시지 불러오기 실패", err);
       });
   }, []);
+
+  const getStatusInfo = (status) => {
+    const statusMap = {
+      HIGH: { icon: "🚨", label: "긴급", color: "high" },
+      MEDIUM: { icon: "⚠️", label: "보통", color: "medium" },
+      LOW: { icon: "💬", label: "일반", color: "low" },
+    };
+    return statusMap[status] || statusMap.LOW;
+  };
+
+  const formatCycle = (seconds) => {
+    if (seconds < 60) return `${seconds}초`;
+
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+
+    if (mins < 60) {
+      return secs > 0 ? `${mins}분 ${secs}초` : `${mins}분`;
+    }
+
+    const hours = Math.floor(mins / 60);
+    const remMins = mins % 60;
+
+    let result = `${hours}시간`;
+    if (remMins > 0) result += ` ${remMins}분`;
+    if (secs > 0) result += ` ${secs}초`;
+    return result;
+  };
+
+  const filteredMessages = messages.filter(
+    (m) => filterStatus === "ALL" || m.status === filterStatus
+  );
 
   // 전체 선택/해제
   const handleSelectAll = (checked) => {
@@ -84,19 +160,17 @@ const MessageList = () => {
 
     try {
       for (let id of selectedItems) {
-        await axios.delete(
-          `${import.meta.env.VITE_API_URL}/api/v1/template/delete`,
-          {
-            data: { templateId: id },
-            withCredentials: true,
-          }
-        );
+        await axios.delete(`${API_URL}/api/v1/template/delete`, {
+          data: { templateId: id },
+          withCredentials: true,
+        });
       }
       setMessages(messages.filter((m) => !selectedItems.has(m.id)));
       setSelectedItems(new Set());
       alert("선택된 메시지가 삭제되었습니다.");
     } catch (err) {
       console.error(err);
+      alert("삭제 중 오류가 발생했습니다.");
     }
   };
 
@@ -105,46 +179,45 @@ const MessageList = () => {
     if (!confirm("삭제할까요?")) return;
 
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/v1/template/delete`,
-        {
-          data: { templateId: id },
-          withCredentials: true,
-        }
-      );
+      await axios.delete(`${API_URL}/api/v1/template/delete`, {
+        data: { templateId: id },
+        withCredentials: true,
+      });
       setMessages(messages.filter((m) => m.id !== id));
       setActiveItemId(null);
     } catch (err) {
       console.error(err);
+      alert("삭제 중 오류가 발생했습니다.");
     }
   };
-
-  // 편집 시작
-  const handleEditStart = (id, content) => {
+  const handleEditStart = (message) => {
     setMessages(
       messages.map((m) =>
-        m.id === id ? { ...m, isEditing: true } : { ...m, isEditing: false }
+        m.id === message.id
+          ? { ...m, isEditing: true }
+          : { ...m, isEditing: false }
       )
     );
-    setEditingContent(content);
+    setEditingContent(message.content);
+    setEditingStatus(message.status);
+    setEditingCycle(message.alertCycle);
     setActiveItemId(null);
   };
 
   // 편집 저장
   const handleEditSave = async (id) => {
     if (!editingContent.trim()) {
-      alert("내용 입력 필요!");
+      alert("메시지 내용을 입력해주세요!");
       return;
     }
 
-    const target = messages.find((m) => m.id === id);
     try {
       const res = await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/v1/template/guardian`,
+        `${API_URL}/api/v1/template/guardian`,
         {
           templateId: id,
-          status: target.status,
-          alertCycle: target.alertCycle,
+          status: editingStatus,
+          alertCycle: parseInt(editingCycle),
           message: editingContent.trim(),
         },
         { withCredentials: true }
@@ -153,13 +226,22 @@ const MessageList = () => {
       setMessages(
         messages.map((m) =>
           m.id === id
-            ? { ...m, content: editingContent.trim(), isEditing: false }
+            ? {
+                ...m,
+                content: editingContent.trim(),
+                status: editingStatus,
+                alertCycle: parseInt(editingCycle),
+                isEditing: false,
+              }
             : m
         )
       );
       setEditingContent("");
+      setEditingStatus("");
+      setEditingCycle("");
     } catch (err) {
       console.error(err);
+      alert("수정 중 오류가 발생했습니다.");
     }
   };
 
@@ -168,6 +250,8 @@ const MessageList = () => {
       messages.map((m) => (m.id === id ? { ...m, isEditing: false } : m))
     );
     setEditingContent("");
+    setEditingStatus("");
+    setEditingCycle("");
   };
 
   // 외부 클릭 시 액션 버튼 숨김
@@ -183,20 +267,57 @@ const MessageList = () => {
   }, []);
 
   const isAllSelected =
-    messages.length > 0 && selectedItems.size === messages.length;
+    filteredMessages.length > 0 &&
+    filteredMessages.every((m) => selectedItems.has(m.id));
   const hasSelection = selectedItems.size > 0;
+
+  // 상태별 메시지 개수
+  const statusCounts = {
+    ALL: messages.length,
+    HIGH: messages.filter((m) => m.status === "HIGH").length,
+    MEDIUM: messages.filter((m) => m.status === "MEDIUM").length,
+    LOW: messages.filter((m) => m.status === "LOW").length,
+  };
 
   return (
     <div className="message-management-container">
+      {/* 헤더 */}
       <div className="header-section">
-        <div className="header-content">
-          <h1 className="page-title">메세지 관리</h1>
+        <div className="header-top">
+          <h1 className="page-title">메시지 관리</h1>
           <button className="add-btn" onClick={() => navigate("/add")}>
-            + 메세지 추가
+            <span className="add-icon">+</span>
+            <span>메시지 추가</span>
           </button>
         </div>
 
-        {messages.length > 0 && (
+        {/* 필터 탭 */}
+        <div className="filter-tags">
+          {["ALL", "HIGH", "MEDIUM", "LOW"].map((status) => (
+            <button
+              key={status}
+              className={`filter-tag ${
+                filterStatus === status ? "active" : ""
+              }`}
+              onClick={() => setFilterStatus(status)}
+            >
+              {status === "ALL" ? (
+                <>
+                  전체 <span className="count">{statusCounts[status]}</span>
+                </>
+              ) : (
+                <>
+                  <span className="tab-icon">{getStatusInfo(status).icon}</span>
+                  {getStatusInfo(status).label}
+                  <span className="count">{statusCounts[status]}</span>
+                </>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* 선택 액션 */}
+        {filteredMessages.length > 0 && (
           <div className="bulk-actions">
             <label className="select-all-wrapper">
               <input
@@ -205,110 +326,194 @@ const MessageList = () => {
                 checked={isAllSelected}
                 onChange={(e) => handleSelectAll(e.target.checked)}
               />
-              전체 선택
+              <span>전체 선택</span>
             </label>
 
-            <button
-              className={`delete-selected-btn ${hasSelection ? "active" : ""}`}
-              onClick={handleDeleteSelected}
-              disabled={!hasSelection}
-            >
-              선택 삭제 ({selectedItems.size})
-            </button>
+            {hasSelection && (
+              <button
+                className="delete-selected-btn active"
+                onClick={handleDeleteSelected}
+              >
+                <span className="delete-icon">🗑️</span>
+                선택 삭제 ({selectedItems.size})
+              </button>
+            )}
 
-            <span className="message-count">{messages.length}/20</span>
+            <span className="message-quota">
+              <span className="current">{messages.length}</span>
+              <span className="divider">/</span>
+              <span className="max">20</span>
+            </span>
           </div>
         )}
       </div>
 
+      {/* 메시지 리스트 */}
       <div className="messages-container">
-        {messages.length === 0 ? (
+        {filteredMessages.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">💬</div>
-            <div className="empty-title">메세지가 없습니다</div>
-            <div className="empty-description">
-              환자에게 보여줄 메세지를 <br /> 추가해보세요!
+            <div className="empty-title">
+              {filterStatus === "ALL"
+                ? "메시지가 없습니다"
+                : `${getStatusInfo(filterStatus).label} 메시지가 없습니다`}
             </div>
+            <div className="empty-description">
+              환자에게 보여줄 메시지를
+              <br />
+              추가해보세요!
+            </div>
+            <button className="empty-add-btn" onClick={() => navigate("/add")}>
+              메시지 추가하기
+            </button>
           </div>
         ) : (
-          messages.map((message) => (
-            <div key={message.id} className="message-item">
-              <div className="message-content">
-                <input
-                  type="checkbox"
-                  className="message-checkbox"
-                  checked={selectedItems.has(message.id)}
-                  onChange={(e) =>
-                    handleSelectItem(message.id, e.target.checked)
-                  }
-                />
+          <div className="messages-list">
+            {filteredMessages.map((message) => {
+              const statusInfo = getStatusInfo(message.status);
+              return (
+                <div
+                  key={message.id}
+                  className={`message-item ${
+                    message.isEditing ? "editing" : ""
+                  }`}
+                >
+                  {message.isEditing ? (
+                    // 편집 모드
+                    <div className="edit-mode">
+                      <div className="edit-header">
+                        <span className="edit-label">메시지 수정</span>
+                      </div>
 
-                {message.isEditing ? (
-                  <>
-                    <input
-                      type="text"
-                      className="message-input"
-                      value={editingContent}
-                      onChange={(e) => setEditingContent(e.target.value)}
-                      autoFocus
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") handleEditSave(message.id);
-                        if (e.key === "Escape") handleEditCancel(message.id);
-                      }}
-                    />
-                    <div className="edit-actions">
-                      <button
-                        className="edit-btn save-btn"
-                        onClick={() => handleEditSave(message.id)}
-                      >
-                        저장
-                      </button>
-                      <button
-                        className="edit-btn cancel-btn"
-                        onClick={() => handleEditCancel(message.id)}
-                      >
-                        취소
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div
-                      className="message-text"
-                      onClick={() =>
-                        setActiveItemId(
-                          activeItemId === message.id ? null : message.id
-                        )
-                      }
-                    >
-                      {message.content}
-                    </div>
+                      <textarea
+                        className="message-edit-input"
+                        value={editingContent}
+                        onChange={(e) => setEditingContent(e.target.value)}
+                        placeholder="메시지를 입력하세요"
+                        autoFocus
+                      />
 
-                    <div
-                      className={`item-actions ${
-                        activeItemId === message.id ? "active" : ""
-                      }`}
-                    >
-                      <button
-                        className="action-btn edit-action-btn"
+                      <div className="edit-options">
+                        <div className="option-group">
+                          <label className="option-label">중요도</label>
+                          <div className="status-select-group">
+                            {["HIGH", "MEDIUM", "LOW"].map((status) => (
+                              <button
+                                key={status}
+                                className={`status-option ${
+                                  editingStatus === status ? "selected" : ""
+                                }`}
+                                onClick={() => setEditingStatus(status)}
+                              >
+                                <span>{getStatusInfo(status).icon}</span>
+                                <span>{getStatusInfo(status).label}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="option-group">
+                          <label className="option-label">알림 주기</label>
+                          <div className="cycle-input-wrapper">
+                            <input
+                              type="number"
+                              className="cycle-input"
+                              value={editingCycle}
+                              onChange={(e) => setEditingCycle(e.target.value)}
+                              min="1"
+                              max="1440"
+                            />
+                            <span className="cycle-unit">분</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="edit-actions">
+                        <button
+                          className="edit-btn save-btn"
+                          onClick={() => handleEditSave(message.id)}
+                        >
+                          저장
+                        </button>
+                        <button
+                          className="edit-btn cancel-btn"
+                          onClick={() => handleEditCancel(message.id)}
+                        >
+                          취소
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    // 일반 모드
+                    <div className="message-content">
+                      <input
+                        type="checkbox"
+                        className="message-checkbox"
+                        checked={selectedItems.has(message.id)}
+                        onChange={(e) =>
+                          handleSelectItem(message.id, e.target.checked)
+                        }
+                        onClick={(e) => e.stopPropagation()}
+                      />
+
+                      <div
+                        className="message-body"
                         onClick={() =>
-                          handleEditStart(message.id, message.content)
+                          setActiveItemId(
+                            activeItemId === message.id ? null : message.id
+                          )
                         }
                       >
-                        수정
-                      </button>
-                      <button
-                        className="action-btn delete-action-btn"
-                        onClick={() => handleDeleteItem(message.id)}
+                        <div className="message-header">
+                          <span
+                            className={`status-badge compact ${statusInfo.color}`}
+                          >
+                            <span className="status-icon">
+                              {statusInfo.icon}
+                            </span>
+                            <span className="status-label">
+                              {statusInfo.label}
+                            </span>
+                          </span>
+                          <span className="alert-cycle">
+                            <span className="cycle-icon">🔔</span>
+                            {formatCycle(message.alertCycle)}
+                          </span>
+                        </div>
+
+                        <p className="message-text">{message.content}</p>
+                      </div>
+
+                      <div
+                        className={`item-actions ${
+                          activeItemId === message.id ? "active" : ""
+                        }`}
                       >
-                        삭제
-                      </button>
+                        <button
+                          className="action-btn edit-action"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditStart(message);
+                          }}
+                        >
+                          <span>✏️</span> 수정
+                        </button>
+                        <button
+                          className="action-btn delete-action"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteItem(message.id);
+                          }}
+                        >
+                          <span>🗑️</span> 삭제
+                        </button>
+                      </div>
                     </div>
-                  </>
-                )}
-              </div>
-            </div>
-          ))
+                  )}
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
     </div>
