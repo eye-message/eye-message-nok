@@ -28,9 +28,12 @@ function DiaryForm() {
   useEffect(() => {
     if (mode === 'edit' && diaryId) {
       axios
-        .get(`http://localhost:8080/api/diaries/${diaryId}`)
+        .get(`${import.meta.env.VITE_API_URL}/api/diaries/${diaryId}`, {
+          withCredentials: true,
+        })
         .then((res) => {
           const entry = res.data;
+
           setStatus(entry.status || '');
           setContent(entry.textBody || '');
           setInitialStatus(entry.status || '');
@@ -47,31 +50,64 @@ function DiaryForm() {
       status,
       textBody: content,
     };
-
+    console.log('📤 수정 payload:', payload);
     if (mode === 'edit') {
       axios
-        .put(`http://localhost:8080/api/diaries/${diaryId}`, payload)
+        .put(
+          `${import.meta.env.VITE_API_URL}/api/diaries/${diaryId}`,
+          payload,
+          {
+            withCredentials: true,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+
         .then(() => {
           alert('일지가 수정되었습니다.');
           navigate('/diary/detail', {
             state: { selectedDate: diaryDate, diaryId },
           });
         })
-        .catch(() => alert('수정 실패'));
+        .catch((err) => {
+          console.error('수정 실패:', err);
+          alert('수정 실패');
+        });
     } else {
       axios
-        .post('http://localhost:8080/api/diaries', payload)
+        .post(`${import.meta.env.VITE_API_URL}/api/diaries`, payload, {
+          withCredentials: true,
+        })
         .then(() => {
           alert('일지가 저장되었습니다.');
           navigate('/diary');
         })
-        .catch(() => alert('저장 실패'));
+        .catch((err) => {
+          console.error('저장 실패:', err);
+          alert('저장 실패');
+        });
     }
   };
 
   const handleCancel = () => {
     setStatus(initialStatus);
     setContent(initialContent);
+  };
+
+  // 삭제 핸들러
+  const handleDelete = () => {
+    if (!diaryId) return;
+
+    axios
+      .delete(`${import.meta.env.VITE_API_URL}/api/diaries/${diaryId}`, {
+        withCredentials: true,
+      })
+      .then(() => {
+        alert('일지가 삭제되었습니다.');
+        navigate('/diary');
+      })
+      .catch((err) => console.error('삭제 실패:', err));
   };
 
   return (

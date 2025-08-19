@@ -45,13 +45,20 @@
   padding-bottom: 16px;
 }
 
+.profile-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+
 .profile-img-placeholder {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: #f3f3f3;
+  background-color: #e9ecef;
 }
-
 .profile-name {
   font-size: 20px;
   font-weight: 700;
@@ -80,4 +87,44 @@
 .arrow {
   font-size: 18px;
   color: #b5b5b5;
+}
+
+/* 모달 기본 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+}
+
+.modal-content h3 {
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }

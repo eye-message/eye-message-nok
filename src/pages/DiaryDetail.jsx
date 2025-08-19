@@ -24,19 +24,25 @@ function DiaryDetail() {
   useEffect(() => {
     if (diaryId) {
       axios
-        .get(`http://localhost:8080/api/diaries/${diaryId}`)
+        .get(`http://localhost:8080/api/diaries/${diaryId}`, {
+          withCredentials: true,
+        })
         .then((res) => {
-          const entry = res.data;
+          const entry = res.data.data || res.data;
           setStatus(entry.status || '');
           setContent(entry.textBody || '');
         })
-        .catch((err) => console.error('다이어리 불러오기 실패:', err));
+        .catch((err) => {
+          console.error('다이어리 불러오기 실패:', err);
+        });
     }
   }, [diaryId]);
 
   const handleDelete = () => {
     axios
-      .delete(`http://localhost:8080/api/diaries/${diaryId}`)
+      .delete(`http://localhost:8080/api/diaries/${diaryId}`, {
+        withCredentials: true,
+      })
       .then(() => {
         alert('일지가 삭제되었습니다.');
         navigate('/diary');

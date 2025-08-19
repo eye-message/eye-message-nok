@@ -11,12 +11,33 @@ function DiaryCalendar() {
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeStartDate, setActiveStartDate] = useState(new Date());
-  const [writtenDiaryMap, setWrittenDiaryMap] = useState({}); // dateKey → status
+  const [writtenDiaryMap, setWrittenDiaryMap] = useState({});
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
+    // 1) 세션 유저 확인
     axios
-      .get('http://localhost:8080/api/diaries')
+      .get(`${import.meta.env.VITE_API_URL}/api/v1/auth/check/currentinfo`, {
+        withCredentials: true,
+      })
       .then((res) => {
+        if (res.data?.auth) {
+          const id = res.data.auth.userId;
+          setUserId(id);
+          console.log('✅ 세션 유저 ID:', id);
+
+          // 2) 다이어리 목록 가져오기
+          return axios.get(`${import.meta.env.VITE_API_URL}/api/diaries`, {
+            withCredentials: true,
+          });
+        } else {
+          console.warn('⚠️ 로그인 안 됨');
+          return null;
+        }
+      })
+      .then((res) => {
+        if (!res) return;
+
         const list = Array.isArray(res.data)
           ? res.data
           : Array.isArray(res.data.data)
@@ -26,13 +47,13 @@ function DiaryCalendar() {
         const map = {};
         list.forEach((entry) => {
           const dateKey = formatLocalDate(parseLocalDate(entry.diaryDate));
-          map[dateKey] = entry.status; // "좋음", "보통", "나쁨"
+          map[dateKey] = entry.status;
         });
 
         setWrittenDiaryMap(map);
       })
       .catch((err) => {
-        console.error('다이어리 목록 조회 실패:', err);
+        console.error(' 조회 실패:', err);
       });
   }, []);
 
@@ -40,9 +61,13 @@ function DiaryCalendar() {
     const dateKey = formatLocalDate(selectedDate);
 
     try {
-      const res = await axios.get('http://localhost:8080/api/diaries/check', {
-        params: { date: dateKey },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/diaries/check`,
+        {
+          params: { date: dateKey },
+          withCredentials: true,
+        }
+      );
 
       const { mode, diaryId } = res.data;
 
@@ -50,7 +75,7 @@ function DiaryCalendar() {
         state: { selectedDate, mode, diaryId },
       });
     } catch (err) {
-      console.error('다이어리 작성 여부 확인 실패:', err);
+      console.error('다이어리 작성 확인 실패:', err);
     }
   };
 
@@ -60,9 +85,13 @@ function DiaryCalendar() {
 
     if (writtenDiaryMap[dateKey]) {
       try {
-        const res = await axios.get('http://localhost:8080/api/diaries/check', {
-          params: { date: dateKey },
-        });
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/diaries/check`,
+          {
+            params: { date: dateKey },
+            withCredentials: true,
+          }
+        );
         const { diaryId } = res.data;
 
         navigate('/diary/detail', {
