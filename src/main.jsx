@@ -13,6 +13,7 @@ import MessageList from "./pages/MessageList";
 import CalendarPage from "./pages/CalendarPage";
 import CalendarMain from "./pages/CalendarMain";
 import CalendarDiary from "./pages/CalendarDiary";
+import OAuthCallback from "./components/OAuthCallback";
 
 import "./styles/App.css";
 
@@ -22,8 +23,9 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/oauth/callback" element={<OAuthCallback />} />
+
         <Route element={<Layout />}>
-          {/* <Route index element={<Navigate to="/notification" replace />} /> */}
           <Route path="/notification" element={<Notification />} />
           <Route path="/board" element={<Board />} />
           <Route path="/list" element={<MessageList />} />

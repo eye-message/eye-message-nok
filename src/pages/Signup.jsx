@@ -1,15 +1,22 @@
 import { useEffect, useState } from "react";
 import "../styles/signup.css";
 import "../styles/signup.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { API_URL } from "../constants/config";
 
 const Signup = () => {
+  const location = useLocation();
+  const receivedData = location.state?.user;
+
+  console.log("receivedData: ", receivedData);
   const [formData, setFormData] = useState({
-    guardianName: "",
+    guardianName: receivedData.name,
     guardianPhone: "",
     phoneVerified: false,
-    patientPassword: "",
-    confirmPassword: "",
+    patientId: "",
+    password1: "",
+    password2: "",
+    patientBirth: "",
     patientName: "",
   });
 
@@ -17,7 +24,25 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+
+    if (name === "guardianPhone") {
+      let digits = value.replace(/\D/g, "");
+
+      if (digits.length <= 3) {
+        value = digits;
+      } else if (digits.length <= 7) {
+        value = digits.slice(0, 3) + "-" + digits.slice(3);
+      } else {
+        value =
+          digits.slice(0, 3) +
+          "-" +
+          digits.slice(3, 7) +
+          "-" +
+          digits.slice(7, 11);
+      }
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -29,7 +54,11 @@ const Signup = () => {
       }));
       return;
     }
-    setFormData((prev) => ({ ...prev, phoneVerified: true }));
+    setFormData((prev) => ({
+      ...prev,
+      phoneVerified: true,
+      patientId: prev.guardianPhone.replace(/-/g, ""),
+    }));
     setValidationErrors((prev) => {
       const copy = { ...prev };
       delete copy.guardianPhone;
@@ -37,7 +66,7 @@ const Signup = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.phoneVerified) {
@@ -48,61 +77,35 @@ const Signup = () => {
       return;
     }
 
-    if (formData.patientPassword !== formData.confirmPassword) {
+    if (formData.password1 !== formData.password2) {
       setValidationErrors((prev) => ({
         ...prev,
-        confirmPassword: "비밀번호가 일치하지 않습니다",
+        password2: "비밀번호가 일치하지 않습니다",
       }));
       return;
     }
 
-    const phoneSuffix = formData.guardianPhone.slice(-4);
-    const randomLetters = Math.random()
-      .toString(36)
-      .substring(2, 4)
-      .toUpperCase();
-    const generatedPatientId = `${phoneSuffix}${randomLetters}`;
+    console.log("formData: ", formData);
 
-    console.log("회원가입 데이터:", {
-      ...formData,
-      patientId: generatedPatientId,
+    await fetch(`${API_URL}/api/v1/auth/patient`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
     });
 
-    // 성공 후 페이지 이동
     setTimeout(() => {
       navigate("/notification"); // React Router 사용 시
-      alert("카카오 로그인 성공! 회원정보 입력 페이지로 이동합니다.");
+      alert("회원가입 성공! 메세지 목록 페이지로 이동합니다.");
     }, 1000);
   };
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
-          credentials: "include", // 세션 쿠키 포함
-        });
-
-        console.log("서버로부터 받은 데이터", res);
-        if (res.ok) {
-          const data = await res.json();
-          console.log("로그인된 유저:", data);
-          // 회원가입 추가 입력 필요하면 form 보여주기
-        } else {
-          alert("로그인이 필요합니다.");
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchUser();
-  }, []);
 
   return (
     <div className="signup-container">
       <div className="mobile-container">
         <form className="form-container" onSubmit={handleSubmit}>
-          {/* 보호자 정보 */}
           <div className="guardian-section">
             <h2 className="section-title">보호자 정보</h2>
 
@@ -124,6 +127,7 @@ const Signup = () => {
               <div className="phone-input-row">
                 <input
                   type="tel"
+                  maxLength={13}
                   id="guardianPhone"
                   name="guardianPhone"
                   value={formData.guardianPhone}
@@ -152,33 +156,26 @@ const Signup = () => {
             </div>
           </div>
 
-          {/* 환자 정보 */}
           <div className="patient-section">
             <h2 className="section-title">환자 계정 정보</h2>
-
-            {/* 자동 생성 환자 ID (표시만) */}
             <div className="form-group">
               <label htmlFor="patientId">환자 ID</label>
               <input
                 type="text"
                 id="patientId"
-                value={
-                  formData.guardianPhone.length >= 4
-                    ? formData.guardianPhone.slice(-4) + "AA"
-                    : ""
-                }
+                value={formData.patientId}
                 readOnly
               />
               <div className="input-helper">휴대폰 인증 후 자동 생성됩니다</div>
             </div>
 
             <div className="form-group">
-              <label htmlFor="patientPassword">비밀번호</label>
+              <label htmlFor="password1">비밀번호</label>
               <input
                 type="password"
-                id="patientPassword"
-                name="patientPassword"
-                value={formData.patientPassword}
+                id="password1"
+                name="password1"
+                value={formData.password1}
                 onChange={handleInputChange}
                 placeholder="비밀번호"
                 required
@@ -186,20 +183,18 @@ const Signup = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="confirmPassword">비밀번호 확인</label>
+              <label htmlFor="password2">비밀번호 확인</label>
               <input
                 type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formData.confirmPassword}
+                id="password2"
+                name="password2"
+                value={formData.password2}
                 onChange={handleInputChange}
                 placeholder="비밀번호 재입력"
                 required
               />
-              {validationErrors.confirmPassword && (
-                <div className="input-error">
-                  {validationErrors.confirmPassword}
-                </div>
+              {validationErrors.password2 && (
+                <div className="input-error">{validationErrors.password2}</div>
               )}
             </div>
 
@@ -212,6 +207,19 @@ const Signup = () => {
                 value={formData.patientName}
                 onChange={handleInputChange}
                 placeholder="환자 성함 입력"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="patientBirth">환자 생년월일</label>
+              <input
+                type="date"
+                id="patientBirth"
+                name="patientBirth"
+                value={formData.patientBirth}
+                onChange={handleInputChange}
+                placeholder="환자 생년월일 입력"
                 required
               />
             </div>
