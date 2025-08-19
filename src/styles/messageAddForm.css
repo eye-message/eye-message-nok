@@ -49,19 +49,9 @@
 .section {
   background: white;
   border-radius: 16px;
-  padding: 24px;
+  padding: 6px 20px;
   margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.section-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #2c3e50;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .urgency-tags {
@@ -72,7 +62,7 @@
 
 .urgency-tag {
   flex: 1;
-  padding: 16px 12px;
+  padding: 10px 12px;
   border: 2px solid transparent;
   border-radius: 12px;
   text-align: center;
@@ -182,8 +172,8 @@
   border-radius: 3px;
   background: #e9ecef;
   outline: none;
-  -webkit-appearance: none;
   margin-bottom: 12px;
+  resize: none;
 }
 
 .interval-slider::-webkit-slider-thumb {
@@ -236,8 +226,8 @@
 }
 
 .message-textarea {
-  width: 100%;
-  min-height: 120px;
+  width: 90%;
+  min-height: 50px;
   border: 2px solid #e9ecef;
   border-radius: 12px;
   padding: 16px;
@@ -319,7 +309,7 @@
   background: #f8f9fa;
   border: 2px dashed #dee2e6;
   border-radius: 12px;
-  padding: 20px;
+  padding: 15px;
   text-align: center;
   margin-top: 16px;
 }
