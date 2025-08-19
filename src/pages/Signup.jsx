@@ -63,11 +63,6 @@ const Signup = () => {
       .toUpperCase();
     const generatedPatientId = `${phoneSuffix}${randomLetters}`;
 
-    console.log("회원가입 데이터:", {
-      ...formData,
-      patientId: generatedPatientId,
-    });
-
     // 성공 후 페이지 이동
     setTimeout(() => {
       navigate("/notification"); // React Router 사용 시
@@ -82,11 +77,8 @@ const Signup = () => {
           credentials: "include", // 세션 쿠키 포함
         });
 
-        console.log("서버로부터 받은 데이터", res);
         if (res.ok) {
           const data = await res.json();
-          console.log("로그인된 유저:", data);
-          // 회원가입 추가 입력 필요하면 form 보여주기
         } else {
           alert("로그인이 필요합니다.");
         }
