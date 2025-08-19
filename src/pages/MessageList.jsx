@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "../styles/messageList.css";
+import axios from "axios";
 
 const MessageList = () => {
   // 샘플 메세지 데이터
@@ -33,10 +34,35 @@ const MessageList = () => {
 
   const [selectedItems, setSelectedItems] = useState(new Set());
   const [activeItemId, setActiveItemId] = useState(null);
-  const [draggedItem, setDraggedItem] = useState(null);
-  const [dragOverIndex, setDragOverIndex] = useState(null);
   const [editingContent, setEditingContent] = useState("");
 
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/dev/session/getUserInfo`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        return axios.get(
+          `${import.meta.env.VITE_API_URL}/api/v1/template/guardian/list`,
+          { withCredentials: true }
+        );
+      })
+      .then((res) => {
+        const templates = res.data.data || [];
+        const mapped = templates.map((item) => ({
+          id: item.templateId,
+          content: item.message,
+          status: item.status,
+          isEditing: false,
+        }));
+        setMessages(mapped);
+      })
+      .catch((err) => {
+        console.error("메시지 불러오기 실패", err);
+      });
+  }, []);
+
+  // 전체 선택/해제
   const handleSelectAll = (checked) => {
     if (checked) {
       setSelectedItems(new Set(messages.map((m) => m.id)));
@@ -45,34 +71,55 @@ const MessageList = () => {
     }
   };
 
+  // 개별 선택/해제
   const handleSelectItem = (id, checked) => {
     const newSelected = new Set(selectedItems);
-    if (checked) {
-      newSelected.add(id);
-    } else {
-      newSelected.delete(id);
-    }
+    checked ? newSelected.add(id) : newSelected.delete(id);
     setSelectedItems(newSelected);
   };
 
-  const handleDeleteSelected = () => {
+  const handleDeleteSelected = async () => {
     if (selectedItems.size === 0) return;
+    if (!confirm(`선택한 ${selectedItems.size}개 삭제할까요?`)) return;
 
-    if (
-      confirm(`선택한 ${selectedItems.size}개의 메세지를 삭제하시겠습니까?`)
-    ) {
+    try {
+      for (let id of selectedItems) {
+        await axios.delete(
+          `${import.meta.env.VITE_API_URL}/api/v1/template/delete`,
+          {
+            data: { templateId: id },
+            withCredentials: true,
+          }
+        );
+      }
       setMessages(messages.filter((m) => !selectedItems.has(m.id)));
       setSelectedItems(new Set());
+      alert("선택된 메시지가 삭제되었습니다.");
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  const handleDeleteItem = (id) => {
-    if (confirm("이 메세지를 삭제하시겠습니까?")) {
+  // 개별 삭제
+  const handleDeleteItem = async (id) => {
+    if (!confirm("삭제할까요?")) return;
+
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/api/v1/template/delete`,
+        {
+          data: { templateId: id },
+          withCredentials: true,
+        }
+      );
       setMessages(messages.filter((m) => m.id !== id));
       setActiveItemId(null);
+    } catch (err) {
+      console.error(err);
     }
   };
 
+  // 편집 시작
   const handleEditStart = (id, content) => {
     setMessages(
       messages.map((m) =>
@@ -83,20 +130,37 @@ const MessageList = () => {
     setActiveItemId(null);
   };
 
-  const handleEditSave = (id) => {
-    if (editingContent.trim() === "") {
-      alert("메세지 내용을 입력해주세요.");
+  // 편집 저장
+  const handleEditSave = async (id) => {
+    if (!editingContent.trim()) {
+      alert("내용 입력 필요!");
       return;
     }
 
-    setMessages(
-      messages.map((m) =>
-        m.id === id
-          ? { ...m, content: editingContent.trim(), isEditing: false }
-          : m
-      )
-    );
-    setEditingContent("");
+    const target = messages.find((m) => m.id === id);
+    try {
+      const res = await axios.put(
+        `${import.meta.env.VITE_API_URL}/api/v1/template/guardian`,
+        {
+          templateId: id,
+          status: target.status,
+          alertCycle: target.alertCycle,
+          message: editingContent.trim(),
+        },
+        { withCredentials: true }
+      );
+
+      setMessages(
+        messages.map((m) =>
+          m.id === id
+            ? { ...m, content: editingContent.trim(), isEditing: false }
+            : m
+        )
+      );
+      setEditingContent("");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleEditCancel = (id) => {
@@ -106,31 +170,7 @@ const MessageList = () => {
     setEditingContent("");
   };
 
-  const handleDragStart = (e, index) => {
-    setDraggedItem({ index, item: messages[index] });
-    e.dataTransfer.effectAllowed = "move";
-  };
-
-  const handleDragOver = (e, index) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-    setDragOverIndex(index);
-  };
-
-  const handleDrop = (e, dropIndex) => {
-    e.preventDefault();
-
-    if (draggedItem && draggedItem.index !== dropIndex) {
-      const newMessages = [...messages];
-      const draggedMessage = newMessages.splice(draggedItem.index, 1)[0];
-      newMessages.splice(dropIndex, 0, draggedMessage);
-      setMessages(newMessages);
-    }
-
-    setDraggedItem(null);
-    setDragOverIndex(null);
-  };
-
+  // 외부 클릭 시 액션 버튼 숨김
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest(".message-item")) {
@@ -147,155 +187,131 @@ const MessageList = () => {
   const hasSelection = selectedItems.size > 0;
 
   return (
-    <>
-      <div className="message-management-container">
-        <div className="header-section">
-          <div className="header-content">
-            <h1 className="page-title">메세지 관리</h1>
-            <button
-              className="add-btn"
-              onClick={() => alert("메세지 추가 페이지로 이동")}
-            >
-              + 메세지 추가
-            </button>
-          </div>
+    <div className="message-management-container">
+      <div className="header-section">
+        <div className="header-content">
+          <h1 className="page-title">메세지 관리</h1>
+          <button className="add-btn" onClick={() => navigate("/add")}>
+            + 메세지 추가
+          </button>
+        </div>
 
-          {messages.length > 0 && (
-            <div className="bulk-actions">
-              <label className="select-all-wrapper">
+        {messages.length > 0 && (
+          <div className="bulk-actions">
+            <label className="select-all-wrapper">
+              <input
+                type="checkbox"
+                className="checkbox"
+                checked={isAllSelected}
+                onChange={(e) => handleSelectAll(e.target.checked)}
+              />
+              전체 선택
+            </label>
+
+            <button
+              className={`delete-selected-btn ${hasSelection ? "active" : ""}`}
+              onClick={handleDeleteSelected}
+              disabled={!hasSelection}
+            >
+              선택 삭제 ({selectedItems.size})
+            </button>
+
+            <span className="message-count">{messages.length}/20</span>
+          </div>
+        )}
+      </div>
+
+      <div className="messages-container">
+        {messages.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-icon">💬</div>
+            <div className="empty-title">메세지가 없습니다</div>
+            <div className="empty-description">
+              환자에게 보여줄 메세지를 <br /> 추가해보세요!
+            </div>
+          </div>
+        ) : (
+          messages.map((message) => (
+            <div key={message.id} className="message-item">
+              <div className="message-content">
                 <input
                   type="checkbox"
-                  className="checkbox"
-                  checked={isAllSelected}
-                  onChange={(e) => handleSelectAll(e.target.checked)}
+                  className="message-checkbox"
+                  checked={selectedItems.has(message.id)}
+                  onChange={(e) =>
+                    handleSelectItem(message.id, e.target.checked)
+                  }
                 />
-                전체 선택
-              </label>
 
-              <button
-                className={`delete-selected-btn ${
-                  hasSelection ? "active" : ""
-                }`}
-                onClick={handleDeleteSelected}
-                disabled={!hasSelection}
-              >
-                선택 삭제 ({selectedItems.size})
-              </button>
+                {message.isEditing ? (
+                  <>
+                    <input
+                      type="text"
+                      className="message-input"
+                      value={editingContent}
+                      onChange={(e) => setEditingContent(e.target.value)}
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleEditSave(message.id);
+                        if (e.key === "Escape") handleEditCancel(message.id);
+                      }}
+                    />
+                    <div className="edit-actions">
+                      <button
+                        className="edit-btn save-btn"
+                        onClick={() => handleEditSave(message.id)}
+                      >
+                        저장
+                      </button>
+                      <button
+                        className="edit-btn cancel-btn"
+                        onClick={() => handleEditCancel(message.id)}
+                      >
+                        취소
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div
+                      className="message-text"
+                      onClick={() =>
+                        setActiveItemId(
+                          activeItemId === message.id ? null : message.id
+                        )
+                      }
+                    >
+                      {message.content}
+                    </div>
 
-              <span className="message-count">{messages.length}/20</span>
-            </div>
-          )}
-        </div>
-
-        <div className="messages-container">
-          {messages.length === 0 ? (
-            <div className="empty-state">
-              <div className="empty-icon">💬</div>
-              <div className="empty-title">메세지가 없습니다</div>
-              <div className="empty-description">
-                환자에게 보여줄 메세지를
-                <br />
-                추가해보세요!
-              </div>
-            </div>
-          ) : (
-            messages.map((message, index) => (
-              <div
-                key={message.id}
-                className={`message-item ${
-                  draggedItem?.index === index ? "dragging" : ""
-                } ${dragOverIndex === index ? "drag-over" : ""}`}
-                draggable
-                onDragStart={(e) => handleDragStart(e, index)}
-                onDragOver={(e) => handleDragOver(e, index)}
-                onDrop={(e) => handleDrop(e, index)}
-                onDragEnd={() => {
-                  setDraggedItem(null);
-                  setDragOverIndex(null);
-                }}
-              >
-                <div className="message-content">
-                  <div className="drag-handle">⋮⋮</div>
-
-                  <input
-                    type="checkbox"
-                    className="message-checkbox"
-                    checked={selectedItems.has(message.id)}
-                    onChange={(e) =>
-                      handleSelectItem(message.id, e.target.checked)
-                    }
-                  />
-
-                  {message.isEditing ? (
-                    <>
-                      <input
-                        type="text"
-                        className="message-input"
-                        value={editingContent}
-                        onChange={(e) => setEditingContent(e.target.value)}
-                        autoFocus
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") handleEditSave(message.id);
-                          if (e.key === "Escape") handleEditCancel(message.id);
-                        }}
-                      />
-                      <div className="edit-actions">
-                        <button
-                          className="edit-btn save-btn"
-                          onClick={() => handleEditSave(message.id)}
-                        >
-                          저장
-                        </button>
-                        <button
-                          className="edit-btn cancel-btn"
-                          onClick={() => handleEditCancel(message.id)}
-                        >
-                          취소
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div
-                        className="message-text"
+                    <div
+                      className={`item-actions ${
+                        activeItemId === message.id ? "active" : ""
+                      }`}
+                    >
+                      <button
+                        className="action-btn edit-action-btn"
                         onClick={() =>
-                          setActiveItemId(
-                            activeItemId === message.id ? null : message.id
-                          )
+                          handleEditStart(message.id, message.content)
                         }
                       >
-                        {message.content}
-                      </div>
-
-                      <div
-                        className={`item-actions ${
-                          activeItemId === message.id ? "active" : ""
-                        }`}
+                        수정
+                      </button>
+                      <button
+                        className="action-btn delete-action-btn"
+                        onClick={() => handleDeleteItem(message.id)}
                       >
-                        <button
-                          className="action-btn edit-action-btn"
-                          onClick={() =>
-                            handleEditStart(message.id, message.content)
-                          }
-                        >
-                          수정
-                        </button>
-                        <button
-                          className="action-btn delete-action-btn"
-                          onClick={() => handleDeleteItem(message.id)}
-                        >
-                          삭제
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
+                        삭제
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
-            ))
-          )}
-        </div>
+            </div>
+          ))
+        )}
       </div>
-    </>
+    </div>
   );
 };
 

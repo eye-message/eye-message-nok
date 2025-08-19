@@ -19,24 +19,29 @@ function DiaryDetail() {
 
   const [status, setStatus] = useState("");
   const [content, setContent] = useState("");
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     if (diaryId) {
       axios
-        .get(`http://localhost:8080/api/diaries/${diaryId}`)
+        .get(`http://localhost:8080/api/diaries/${diaryId}`, {
+          withCredentials: true,
+        })
         .then((res) => {
-          const entry = res.data;
+          const entry = res.data.data || res.data;
           setStatus(entry.status || "");
           setContent(entry.textBody || "");
         })
-        .catch((err) => console.error("다이어리 불러오기 실패:", err));
+        .catch((err) => {
+          console.error("다이어리 불러오기 실패:", err);
+        });
     }
   }, [diaryId]);
 
   const handleDelete = () => {
     axios
-      .delete(`http://localhost:8080/api/diaries/${diaryId}`)
+      .delete(`http://localhost:8080/api/diaries/${diaryId}`, {
+        withCredentials: true,
+      })
       .then(() => {
         alert("일지가 삭제되었습니다.");
         navigate("/diary");
@@ -79,32 +84,17 @@ function DiaryDetail() {
           </button>
           <button
             className="btn-delete"
-            onClick={() => setShowDeleteConfirm(true)}
+            onClick={() => {
+              const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
+              if (confirmDelete) {
+                handleDelete();
+              }
+            }}
           >
             삭제
           </button>
         </div>
       </main>
-
-      {/* 모달 */}
-      {showDeleteConfirm && (
-        <div className="modal-backdrop">
-          <div className="modal">
-            <p>정말 삭제하시겠습니까?</p>
-            <div className="modal-buttons">
-              <button className="btn-yes" onClick={handleDelete}>
-                예
-              </button>
-              <button
-                className="btn-no"
-                onClick={() => setShowDeleteConfirm(false)}
-              >
-                아니오
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -4,9 +4,6 @@ import imageSrc from "../assets/image.png";
 import { API_URL } from "../constants/config";
 
 const Login = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [loginSuccess, setLoginSuccess] = useState(false);
-
   const handleKakaoLogin = async () => {
     window.location.href = `${API_URL}/oauth2/authorization/kakao`;
   };

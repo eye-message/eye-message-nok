@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "../styles/messageAddForm.css";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const MessageAddForm = () => {
@@ -79,11 +80,28 @@ const MessageAddForm = () => {
     setIsSubmitting(true);
 
     try {
-      // API 호출 시뮬레이션
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // 긴급도 태그 옵션 → 백엔드 status 값으로 매핑
+      const urgencyMap = {
+        emergency: "HIGH",
+        normal: "MEDIUM",
+        good: "LOW",
+      };
+
+      const payload = {
+        status: urgencyMap[formData.urgency], // 상태
+        alertCycle: formData.repeatInterval, // 반복 주기
+        message: formData.content, // 메세지 내용
+        displayOrder: Date.now(),
+      };
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/v1/template/guardian`,
+        payload,
+        { withCredentials: true }
+      );
 
       alert("메세지가 성공적으로 추가되었습니다!");
-      navigate("/list"); // 목록으로 돌아가기
+      navigate("/list");
     } catch (error) {
       alert("메세지 추가에 실패했습니다. 다시 시도해주세요.");
     } finally {

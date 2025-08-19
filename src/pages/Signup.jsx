@@ -102,6 +102,26 @@ const Signup = () => {
     }, 1000);
   };
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
+          credentials: "include", // 세션 쿠키 포함
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+        } else {
+          alert("로그인이 필요합니다.");
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   return (
     <div className="signup-container">
       <div className="mobile-container">
