@@ -1,0 +1,89 @@
+/* 따뜻한 그레이톤 배경 */
+.desktop-error {
+  min-height: 100vh;
+  background: #ece7e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  padding: 1rem;
+}
+
+/* 카드 */
+.desktop-error__card {
+  background: #ffffff;
+  padding: 3rem 2rem;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+/* 상단 아이콘 */
+.desktop-error__icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+/* 제목/본문 */
+.desktop-error__title {
+  color: #333333;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.desktop-error__desc {
+  color: #666666;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+/* 개발자 도구 안내 박스 */
+.devtips {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e9ecef;
+}
+
+.devtips__title {
+  color: #495057;
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+}
+
+.devtips__text {
+  color: #6c757d;
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* 칩 */
+.chip {
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* 칩 색상 변형 */
+.chip--ios {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.chip--galaxy {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+.chip--ipad {
+  background: #fff3e0;
+  color: #f57c00;
+}
