@@ -20,6 +20,7 @@ const Login = () => {
   //   try {
   //     // prod: 실제 카카오 로그인 로직
   //     // const response = await kakaoLogin();
+
   //     // test: 시뮬레이션
   //     setTimeout(() => {
   //       setLoginSuccess(true);
