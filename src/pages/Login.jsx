@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import '../styles/login.css';
-import imageSrc from '../assets/image.png';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import "../styles/login.css";
+import imageSrc from "../assets/image.png";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -59,16 +59,16 @@ const Login = () => {
           <button
             onClick={handleKakaoLogin}
             disabled={isLoading || loginSuccess}
-            className={`kakao-login-btn ${isLoading ? 'loading' : ''} ${
-              loginSuccess ? 'success' : ''
+            className={`kakao-login-btn ${isLoading ? "loading" : ""} ${
+              loginSuccess ? "success" : ""
             }`}
           >
             <img className="kakao-icon" src={imageSrc} />
             {loginSuccess
-              ? '로그인 성공!'
+              ? "로그인 성공!"
               : isLoading
-              ? '카카오 로그인 중...'
-              : '카카오로 간편 시작하기'}
+              ? "카카오 로그인 중..."
+              : "카카오로 간편 시작하기"}
           </button>
 
           <div className="divider">
@@ -82,10 +82,10 @@ const Login = () => {
           </div>
 
           <div className="privacy-notice">
-            계속 진행하시면{' '}
+            계속 진행하시면{" "}
             <a href="#" onClick={(e) => e.preventDefault()}>
               서비스 이용약관
-            </a>{' '}
+            </a>{" "}
             및<br />
             <a href="#" onClick={(e) => e.preventDefault()}>
               개인정보처리방침

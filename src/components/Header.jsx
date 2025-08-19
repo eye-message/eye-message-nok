@@ -1,12 +1,12 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-import { FiPlusCircle, FiArrowLeft } from 'react-icons/fi';
-import '../styles/Header.css';
+import { useNavigate, useLocation } from "react-router-dom";
+import { FiPlusCircle, FiArrowLeft } from "react-icons/fi";
+import "../styles/Header.css";
 
 function Header() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isDiaryPage = location.pathname.startsWith('/calendar/diary');
+  const isDiaryPage = location.pathname.startsWith("/calendar/diary");
 
   const handleBackClick = () => navigate(-1);
 

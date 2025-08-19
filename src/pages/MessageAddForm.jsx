@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import '../styles/messageAddForm.css';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import "../styles/messageAddForm.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const MessageAddForm = () => {
   const [formData, setFormData] = useState({
-    urgency: '',
+    urgency: "",
     repeatInterval: 300,
-    content: '',
+    content: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -15,27 +15,27 @@ const MessageAddForm = () => {
   // 긴급도 태그 옵션
   const urgencyTypes = [
     {
-      id: 'emergency',
-      label: '긴급',
-      color: '#FF4444',
-      bgColor: '#FFE6E6',
-      description: '즉시 확인이 필요한 중요한 메세지',
+      id: "emergency",
+      label: "긴급",
+      color: "#FF4444",
+      bgColor: "#FFE6E6",
+      description: "즉시 확인이 필요한 중요한 메세지",
       defaultInterval: 30,
     },
     {
-      id: 'normal',
-      label: '보통',
-      color: '#FF8C00',
-      bgColor: '#FFF3E6',
-      description: '일반적인 알림 메세지',
+      id: "normal",
+      label: "보통",
+      color: "#FF8C00",
+      bgColor: "#FFF3E6",
+      description: "일반적인 알림 메세지",
       defaultInterval: 180,
     },
     {
-      id: 'good',
-      label: '양호',
-      color: '#4CAF50',
-      bgColor: '#E8F5E8',
-      description: '격려와 안부를 위한 메세지',
+      id: "good",
+      label: "양호",
+      color: "#4CAF50",
+      bgColor: "#E8F5E8",
+      description: "격려와 안부를 위한 메세지",
       defaultInterval: 300,
     },
   ];
@@ -68,12 +68,12 @@ const MessageAddForm = () => {
 
   const handleSubmit = async () => {
     if (!formData.urgency) {
-      alert('긴급도를 선택해주세요.');
+      alert("긴급도를 선택해주세요.");
       return;
     }
 
     if (!formData.content.trim()) {
-      alert('메세지 내용을 입력해주세요.');
+      alert("메세지 내용을 입력해주세요.");
       return;
     }
 
@@ -82,9 +82,9 @@ const MessageAddForm = () => {
     try {
       // 긴급도 태그 옵션 → 백엔드 status 값으로 매핑
       const urgencyMap = {
-        emergency: 'HIGH',
-        normal: 'MEDIUM',
-        good: 'LOW',
+        emergency: "HIGH",
+        normal: "MEDIUM",
+        good: "LOW",
       };
 
       const payload = {
@@ -100,10 +100,10 @@ const MessageAddForm = () => {
         { withCredentials: true }
       );
 
-      alert('메세지가 성공적으로 추가되었습니다!');
-      navigate('/list');
+      alert("메세지가 성공적으로 추가되었습니다!");
+      navigate("/list");
     } catch (error) {
-      alert('메세지 추가에 실패했습니다. 다시 시도해주세요.');
+      alert("메세지 추가에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);
     }
@@ -133,7 +133,7 @@ const MessageAddForm = () => {
               <div
                 key={type.id}
                 className={`urgency-tag ${type.id} ${
-                  formData.urgency === type.id ? 'selected' : ''
+                  formData.urgency === type.id ? "selected" : ""
                 }`}
                 onClick={() => handleUrgencySelect(type.id)}
               >
@@ -211,7 +211,7 @@ const MessageAddForm = () => {
           {selectedType && (
             <div className="template-suggestions">
               <div className="template-title">💡 추천 템플릿</div>
-              {selectedType.id === 'emergency' && (
+              {selectedType.id === "emergency" && (
                 <>
                   <div
                     className="template-item"
@@ -219,7 +219,7 @@ const MessageAddForm = () => {
                       setFormData({
                         ...formData,
                         content:
-                          '🚨 즉시 확인이 필요합니다. 안전을 위해 연락주세요!',
+                          "🚨 즉시 확인이 필요합니다. 안전을 위해 연락주세요!",
                       })
                     }
                   >
@@ -230,7 +230,7 @@ const MessageAddForm = () => {
                     onClick={() =>
                       setFormData({
                         ...formData,
-                        content: '⚠️ 긴급 상황입니다. 즉시 대응해주세요.',
+                        content: "⚠️ 긴급 상황입니다. 즉시 대응해주세요.",
                       })
                     }
                   >
@@ -238,14 +238,14 @@ const MessageAddForm = () => {
                   </div>
                 </>
               )}
-              {selectedType.id === 'normal' && (
+              {selectedType.id === "normal" && (
                 <>
                   <div
                     className="template-item"
                     onClick={() =>
                       setFormData({
                         ...formData,
-                        content: '💊 약 복용 시간입니다. 물과 함께 드세요.',
+                        content: "💊 약 복용 시간입니다. 물과 함께 드세요.",
                       })
                     }
                   >
@@ -257,7 +257,7 @@ const MessageAddForm = () => {
                       setFormData({
                         ...formData,
                         content:
-                          '🏥 건강 체크 시간이에요. 혈압을 측정해주세요.',
+                          "🏥 건강 체크 시간이에요. 혈압을 측정해주세요.",
                       })
                     }
                   >
@@ -265,7 +265,7 @@ const MessageAddForm = () => {
                   </div>
                 </>
               )}
-              {selectedType.id === 'good' && (
+              {selectedType.id === "good" && (
                 <>
                   <div
                     className="template-item"
@@ -273,7 +273,7 @@ const MessageAddForm = () => {
                       setFormData({
                         ...formData,
                         content:
-                          '😊 오늘 하루도 건강하게 보내세요! 항상 응원하고 있어요.',
+                          "😊 오늘 하루도 건강하게 보내세요! 항상 응원하고 있어요.",
                       })
                     }
                   >
@@ -285,7 +285,7 @@ const MessageAddForm = () => {
                       setFormData({
                         ...formData,
                         content:
-                          '💝 컨디션이 좋아 보여서 기뻐요. 계속 잘 지내세요!',
+                          "💝 컨디션이 좋아 보여서 기뻐요. 계속 잘 지내세요!",
                       })
                     }
                   >
@@ -300,7 +300,7 @@ const MessageAddForm = () => {
               <div className="preview-title">📱 환자 화면 미리보기</div>
               <div className="preview-message">{formData.content}</div>
               <div className="preview-meta">
-                {selectedType?.label} • {formatTime(formData.repeatInterval)}{' '}
+                {selectedType?.label} • {formatTime(formData.repeatInterval)}{" "}
                 반복
               </div>
             </div>
@@ -314,7 +314,7 @@ const MessageAddForm = () => {
             isSubmitting || !formData.urgency || !formData.content.trim()
           }
         >
-          {isSubmitting ? '메세지 추가 중...' : '메세지 추가 완료'}
+          {isSubmitting ? "메세지 추가 중..." : "메세지 추가 완료"}
         </button>
       </div>
     </div>
