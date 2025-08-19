@@ -62,7 +62,9 @@
 
 .urgency-tag {
   flex: 1;
-  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 7px 12px;
   border: 2px solid transparent;
   border-radius: 12px;
   text-align: center;
@@ -308,9 +310,9 @@
   background: #f8f9fa;
   border: 2px dashed #dee2e6;
   border-radius: 12px;
-  padding: 15px;
+  padding: 10px;
   text-align: center;
-  margin-top: 16px;
+  margin-top: 10px;
 }
 
 .preview-title {

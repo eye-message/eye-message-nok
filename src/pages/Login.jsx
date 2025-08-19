@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import "../styles/login.css";
 import imageSrc from "../assets/image.png";
 import { API_URL } from "../constants/config";
@@ -26,19 +25,9 @@ const Login = () => {
         </div>
 
         <div className="login-content">
-          <button
-            onClick={handleKakaoLogin}
-            disabled={isLoading || loginSuccess}
-            className={`kakao-login-btn ${isLoading ? "loading" : ""} ${
-              loginSuccess ? "success" : ""
-            }`}
-          >
+          <button onClick={handleKakaoLogin} className="kakao-login-btn">
             <img className="kakao-icon" src={imageSrc} />
-            {loginSuccess
-              ? "로그인 성공!"
-              : isLoading
-              ? "카카오 로그인 중..."
-              : "카카오로 간편 시작하기"}
+            {"카카오로 간편 시작하기"}
           </button>
 
           <div className="divider">

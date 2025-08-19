@@ -202,14 +202,16 @@ const MessageAddForm = () => {
           <div className="char-counter">{formData.content.length}/200</div>
 
           {formData.content && (
-            <div className="preview-card">
+            <>
               <div className="preview-title">📱 환자 화면 미리보기</div>
-              <div className="preview-message">{formData.content}</div>
-              <div className="preview-meta">
-                {selectedType?.label} • {formatTime(formData.repeatInterval)}{" "}
-                반복
+              <div className="preview-card">
+                <div className="preview-message">{formData.content}</div>
+                <div className="preview-meta">
+                  {selectedType?.label} • {formatTime(formData.repeatInterval)}{" "}
+                  반복
+                </div>
               </div>
-            </div>
+            </>
           )}
         </div>
 

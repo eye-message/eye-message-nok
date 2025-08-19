@@ -105,8 +105,8 @@ const Signup = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
-          credentials: "include", // 세션 쿠키 포함
+        const res = await fetch(`${API_URL}/api/auth/me`, {
+          credentials: "include",
         });
 
         if (res.ok) {
