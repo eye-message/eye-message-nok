@@ -31,7 +31,35 @@ function OAuthCallback() {
       });
   }, [navigate]);
 
-  return <p>로그인 처리 중입니다...</p>;
+  return (
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#f8f9fa",
+      }}
+    >
+      <div
+        style={{
+          width: "40px",
+          height: "40px",
+          border: "4px solid #e3e3e3",
+          borderTop: "4px solid #4285f4",
+          borderRadius: "50%",
+          animation: "spin 1s linear infinite",
+        }}
+      ></div>
+      ~
+      <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
+    </div>
+  );
 }
 
 export default OAuthCallback;

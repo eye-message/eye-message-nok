@@ -37,19 +37,14 @@ const MessageList = () => {
   const [dragOverIndex, setDragOverIndex] = useState(null);
   const [editingContent, setEditingContent] = useState("");
 
-  const dragItemRef = useRef(null);
-  const dragOverItemRef = useRef(null);
-
-  // 전체 선택/해제
-  const handleSelectAll = checked => {
+  const handleSelectAll = (checked) => {
     if (checked) {
-      setSelectedItems(new Set(messages.map(m => m.id)));
+      setSelectedItems(new Set(messages.map((m) => m.id)));
     } else {
       setSelectedItems(new Set());
     }
   };
 
-  // 개별 선택/해제
   const handleSelectItem = (id, checked) => {
     const newSelected = new Set(selectedItems);
     if (checked) {
@@ -60,30 +55,27 @@ const MessageList = () => {
     setSelectedItems(newSelected);
   };
 
-  // 선택된 항목들 삭제
   const handleDeleteSelected = () => {
     if (selectedItems.size === 0) return;
 
     if (
       confirm(`선택한 ${selectedItems.size}개의 메세지를 삭제하시겠습니까?`)
     ) {
-      setMessages(messages.filter(m => !selectedItems.has(m.id)));
+      setMessages(messages.filter((m) => !selectedItems.has(m.id)));
       setSelectedItems(new Set());
     }
   };
 
-  // 개별 삭제
-  const handleDeleteItem = id => {
+  const handleDeleteItem = (id) => {
     if (confirm("이 메세지를 삭제하시겠습니까?")) {
-      setMessages(messages.filter(m => m.id !== id));
+      setMessages(messages.filter((m) => m.id !== id));
       setActiveItemId(null);
     }
   };
 
-  // 편집 시작
   const handleEditStart = (id, content) => {
     setMessages(
-      messages.map(m =>
+      messages.map((m) =>
         m.id === id ? { ...m, isEditing: true } : { ...m, isEditing: false }
       )
     );
@@ -91,15 +83,14 @@ const MessageList = () => {
     setActiveItemId(null);
   };
 
-  // 편집 저장
-  const handleEditSave = id => {
+  const handleEditSave = (id) => {
     if (editingContent.trim() === "") {
       alert("메세지 내용을 입력해주세요.");
       return;
     }
 
     setMessages(
-      messages.map(m =>
+      messages.map((m) =>
         m.id === id
           ? { ...m, content: editingContent.trim(), isEditing: false }
           : m
@@ -108,28 +99,24 @@ const MessageList = () => {
     setEditingContent("");
   };
 
-  // 편집 취소
-  const handleEditCancel = id => {
+  const handleEditCancel = (id) => {
     setMessages(
-      messages.map(m => (m.id === id ? { ...m, isEditing: false } : m))
+      messages.map((m) => (m.id === id ? { ...m, isEditing: false } : m))
     );
     setEditingContent("");
   };
 
-  // 드래그 시작
   const handleDragStart = (e, index) => {
     setDraggedItem({ index, item: messages[index] });
     e.dataTransfer.effectAllowed = "move";
   };
 
-  // 드래그 오버
   const handleDragOver = (e, index) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
     setDragOverIndex(index);
   };
 
-  // 드롭
   const handleDrop = (e, dropIndex) => {
     e.preventDefault();
 
@@ -144,9 +131,8 @@ const MessageList = () => {
     setDragOverIndex(null);
   };
 
-  // 외부 클릭 시 액션 버튼 숨김
   useEffect(() => {
-    const handleClickOutside = event => {
+    const handleClickOutside = (event) => {
       if (!event.target.closest(".message-item")) {
         setActiveItemId(null);
       }
@@ -181,7 +167,7 @@ const MessageList = () => {
                   type="checkbox"
                   className="checkbox"
                   checked={isAllSelected}
-                  onChange={e => handleSelectAll(e.target.checked)}
+                  onChange={(e) => handleSelectAll(e.target.checked)}
                 />
                 전체 선택
               </label>
@@ -220,9 +206,9 @@ const MessageList = () => {
                   draggedItem?.index === index ? "dragging" : ""
                 } ${dragOverIndex === index ? "drag-over" : ""}`}
                 draggable
-                onDragStart={e => handleDragStart(e, index)}
-                onDragOver={e => handleDragOver(e, index)}
-                onDrop={e => handleDrop(e, index)}
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragOver={(e) => handleDragOver(e, index)}
+                onDrop={(e) => handleDrop(e, index)}
                 onDragEnd={() => {
                   setDraggedItem(null);
                   setDragOverIndex(null);
@@ -235,7 +221,7 @@ const MessageList = () => {
                     type="checkbox"
                     className="message-checkbox"
                     checked={selectedItems.has(message.id)}
-                    onChange={e =>
+                    onChange={(e) =>
                       handleSelectItem(message.id, e.target.checked)
                     }
                   />
@@ -246,9 +232,9 @@ const MessageList = () => {
                         type="text"
                         className="message-input"
                         value={editingContent}
-                        onChange={e => setEditingContent(e.target.value)}
+                        onChange={(e) => setEditingContent(e.target.value)}
                         autoFocus
-                        onKeyDown={e => {
+                        onKeyDown={(e) => {
                           if (e.key === "Enter") handleEditSave(message.id);
                           if (e.key === "Escape") handleEditCancel(message.id);
                         }}

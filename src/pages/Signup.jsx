@@ -87,7 +87,7 @@ const Signup = () => {
 
     console.log("formData: ", formData);
 
-    await fetch(`${API_URL}/api/v1/auth/patient`, {
+    await fetch(`${API_URL}/api/v1/auth/patientinfo`, {
       method: "POST",
       credentials: "include",
       headers: {
