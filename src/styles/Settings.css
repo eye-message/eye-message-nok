@@ -1,53 +1,147 @@
-.settings-page {
-  background: #fdf9f9;
-  padding-bottom: 60px;
+/* 전체 wrapper */
+.settings-wrapper {
+  max-width: 375px;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
+/* 헤더 */
+.settings-header {
+  background: white;
+  border-bottom: 1px solid #e9ecef;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-top {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+/* 내용 영역 */
+.settings-page {
+  padding: 24px 20px;
+  color: #111;
+}
+
+/* 프로필 */
 .profile-header {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 24px 0;
+  gap: 16px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 16px;
+}
+
+.profile-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
 }
 
 .profile-img-placeholder {
-  width: 100px;
-  height: 100px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  background-color: #d3d3d3;
-  border: 2px solid #ccc;
+  background-color: #e9ecef;
 }
-
 .profile-name {
-  margin-top: 12px;
-  font-weight: 600;
-  font-size: 16px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
 }
 
+/* 설정 목록 */
 .settings-section {
-  background: white;
-  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
 }
 
 .settings-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 16px 0;
-  padding: 16px 0;
-  border: 1px solid;
+  padding: 14px 0;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.settings-item:last-child {
-  border-bottom: none;
+.label {
+  font-size: 16px;
+  color: #444;
 }
 
-.value {
-  color: #111;
+.arrow {
+  font-size: 18px;
+  color: #b5b5b5;
+}
+
+/* 드롭다운 스타일 */
+
+.dropdown-edit {
+  margin: 10px 0 20px 0;
+  padding: 12px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+}
+
+.dropdown-edit.show {
+  max-height: 500px;
+  opacity: 1;
+}
+
+.dropdown-edit input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
   font-size: 14px;
-  font-weight: 500;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
-.value.email {
+.dropdown-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.dropdown-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
   font-weight: bold;
+}
+
+.dropdown-actions button:last-child {
+  background-color: #aaa;
+}
+
+input[readonly] {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
+input:not([readonly]) {
+  background-color: #ffffff;
 }

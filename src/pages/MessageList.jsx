@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import '../styles/messageList.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "../styles/messageList.css";
 
 const MessageList = () => {
   const [messages, setMessages] = useState([]);
   const [selectedItems, setSelectedItems] = useState(new Set());
   const [activeItemId, setActiveItemId] = useState(null);
-  const [editingContent, setEditingContent] = useState('');
+  const [editingContent, setEditingContent] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const MessageList = () => {
         setMessages(mapped);
       })
       .catch((err) => {
-        console.error('메시지 불러오기 실패', err);
+        console.error("메시지 불러오기 실패", err);
       });
   }, []);
 
@@ -69,7 +69,7 @@ const MessageList = () => {
       }
       setMessages(messages.filter((m) => !selectedItems.has(m.id)));
       setSelectedItems(new Set());
-      alert('선택된 메시지가 삭제되었습니다.');
+      alert("선택된 메시지가 삭제되었습니다.");
     } catch (err) {
       console.error(err);
     }
@@ -77,7 +77,7 @@ const MessageList = () => {
 
   /** 단일 삭제 */
   const handleDeleteItem = async (id) => {
-    if (!confirm('삭제할까요?')) return;
+    if (!confirm("삭제할까요?")) return;
 
     try {
       await axios.delete(
@@ -108,7 +108,7 @@ const MessageList = () => {
   /** 수정 저장 (PUT 요청) */
   const handleEditSave = async (id) => {
     if (!editingContent.trim()) {
-      alert('내용 입력 필요!');
+      alert("내용 입력 필요!");
       return;
     }
 
@@ -132,7 +132,7 @@ const MessageList = () => {
             : m
         )
       );
-      setEditingContent('');
+      setEditingContent("");
     } catch (err) {
       console.error(err);
     }
@@ -143,7 +143,7 @@ const MessageList = () => {
     setMessages(
       messages.map((m) => (m.id === id ? { ...m, isEditing: false } : m))
     );
-    setEditingContent('');
+    setEditingContent("");
   };
 
   const isAllSelected =
@@ -155,7 +155,7 @@ const MessageList = () => {
       <div className="header-section">
         <div className="header-content">
           <h1 className="page-title">메세지 관리</h1>
-          <button className="add-btn" onClick={() => navigate('/add')}>
+          <button className="add-btn" onClick={() => navigate("/add")}>
             + 메세지 추가
           </button>
         </div>
@@ -173,7 +173,7 @@ const MessageList = () => {
             </label>
 
             <button
-              className={`delete-selected-btn ${hasSelection ? 'active' : ''}`}
+              className={`delete-selected-btn ${hasSelection ? "active" : ""}`}
               onClick={handleDeleteSelected}
               disabled={!hasSelection}
             >
@@ -216,8 +216,8 @@ const MessageList = () => {
                       onChange={(e) => setEditingContent(e.target.value)}
                       autoFocus
                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') handleEditSave(message.id);
-                        if (e.key === 'Escape') handleEditCancel(message.id);
+                        if (e.key === "Enter") handleEditSave(message.id);
+                        if (e.key === "Escape") handleEditCancel(message.id);
                       }}
                     />
                     <div className="edit-actions">
@@ -250,7 +250,7 @@ const MessageList = () => {
 
                     <div
                       className={`item-actions ${
-                        activeItemId === message.id ? 'active' : ''
+                        activeItemId === message.id ? "active" : ""
                       }`}
                     >
                       <button
