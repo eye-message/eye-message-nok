@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/Settings.css";
 import { parseLocalDate, formatLocalDate } from "../utils/date";
+import Login from "./Login";
 
 function Settings() {
   const [guardian, setGuardian] = useState(null);
@@ -112,6 +113,7 @@ function Settings() {
     }
     if (type === "patient" && patient) {
       setFormData({
+        loginId: patient.loginId || "",
         name: patient.name || "",
         patientBirth: patient.patientBirth
           ? formatLocalDate(parseLocalDate(patient.patientBirth))
@@ -200,6 +202,7 @@ function Settings() {
         </div>
 
         <div className="settings-section">
+          {/* 보호자 수정 */}
           <div className="settings-item">
             <div className="label">보호자 프로필 수정</div>
             <button
@@ -210,6 +213,38 @@ function Settings() {
             </button>
           </div>
 
+          {editMode === "guardian" && (
+            <div className="dropdown-edit show">
+              <label htmlFor="guardian-name">이름</label>
+              <input
+                type="text"
+                id="guardian-name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                readOnly
+              />
+
+              <label htmlFor="guardian-phone">전화번호</label>
+              <input
+                type="text"
+                id="guardian-phone"
+                name="phone"
+                value={formData.phone || ""}
+                onChange={(e) => {
+                  const value = formatPhone(e.target.value);
+                  setFormData((prev) => ({ ...prev, phone: value }));
+                }}
+              />
+
+              <div className="dropdown-actions">
+                <button onClick={handleSave}>수정</button>
+                <button onClick={() => setEditMode(null)}>취소</button>
+              </div>
+            </div>
+          )}
+
+          {/* 환자 수정 */}
           <div className="settings-item">
             <div className="label">환자 프로필 수정</div>
             <button
@@ -219,7 +254,52 @@ function Settings() {
               ➔
             </button>
           </div>
+          {editMode === "patient" && (
+            <div className="dropdown-edit show">
+              <label htmlFor="loginId">아이디</label>
+              <input
+                type="text"
+                id="loginId"
+                name="loginId"
+                value={formData.loginId}
+                readOnly
+              />
 
+              <label htmlFor="name">이름</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+              />
+
+              <label htmlFor="newPassword1">새 비밀번호</label>
+              <input
+                type="password"
+                id="newPassword1"
+                name="newPassword1"
+                value={formData.newPassword1}
+                onChange={handleChange}
+              />
+
+              <label htmlFor="newPassword2">새 비밀번호 확인</label>
+              <input
+                type="password"
+                id="newPassword2"
+                name="newPassword2"
+                value={formData.newPassword2}
+                onChange={handleChange}
+              />
+
+              <div className="dropdown-actions">
+                <button onClick={handleSave}>수정</button>
+                <button onClick={() => setEditMode(null)}>취소</button>
+              </div>
+            </div>
+          )}
+
+          {/* 로그아웃 */}
           <div className="settings-item">
             <div className="label">로그아웃</div>
             <button className="action-btn" onClick={handleLogout}>
@@ -227,6 +307,7 @@ function Settings() {
             </button>
           </div>
 
+          {/* 회원탈퇴 */}
           <div className="settings-item">
             <div className="label">회원탈퇴</div>
             <button className="action-btn" onClick={handleDeleteAccount}>
@@ -235,96 +316,6 @@ function Settings() {
           </div>
         </div>
       </div>
-
-      {/* 모달 */}
-      {editMode && (
-        <div className="modal">
-          <div className="modal-content">
-            {console.log("✅ 렌더링 시 formData.phone:", formData.phone)}
-            <h3>
-              {editMode === "guardian" ? "보호자 정보 수정" : "환자 정보 수정"}
-            </h3>
-            <form>
-              {editMode === "guardian" && (
-                <>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="이름"
-                    value={formData.name}
-                    onChange={handleChange}
-                    readOnly
-                  />
-                  <input
-                    type="text"
-                    name="phone"
-                    placeholder="전화번호"
-                    value={formData.phone || formatPhone(guardian?.phone) || ""}
-                    onChange={(e) => {
-                      const value = formatPhone(e.target.value);
-                      setFormData((prev) => ({ ...prev, phone: value }));
-                    }}
-                  />
-                  {/* <input
-                    type="date"
-                    name="guardianBirth"
-                    value={formData.guardianBirth || ''}
-                    onChange={handleChange}
-                  /> */}
-                  {/* <label>
-                    환자 로그인 ID 동기화
-                    <input
-                      type="checkbox"
-                      name="syncPatientLoginId"
-                      checked={formData.syncPatientLoginId}
-                      onChange={handleChange}
-                    />
-                  </label> */}
-                </>
-              )}
-              {editMode === "patient" && (
-                <>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="이름"
-                    value={formData.name}
-                    onChange={handleChange}
-                  />
-                  {/* <input
-                    type="date"
-                    name="patientBirth"
-                    value={formData.patientBirth || ''}
-                    onChange={handleChange}
-                  /> */}
-                  <input
-                    type="password"
-                    name="newPassword1"
-                    placeholder="새 비밀번호"
-                    value={formData.newPassword1}
-                    onChange={handleChange}
-                  />
-                  <input
-                    type="password"
-                    name="newPassword2"
-                    placeholder="새 비밀번호 확인"
-                    value={formData.newPassword2}
-                    onChange={handleChange}
-                  />
-                </>
-              )}
-            </form>
-            <div className="modal-actions">
-              <button type="button" onClick={handleSave}>
-                저장
-              </button>
-              <button type="button" onClick={() => setEditMode(null)}>
-                취소
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

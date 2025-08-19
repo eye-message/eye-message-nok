@@ -89,42 +89,59 @@
   color: #b5b5b5;
 }
 
-/* 모달 기본 */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+/* 드롭다운 스타일 */
 
-.modal-content {
-  background: #fff;
-  border-radius: 12px;
-  padding: 20px;
-  width: 90%;
-  max-width: 400px;
-}
-
-.modal-content h3 {
-  margin-bottom: 16px;
-  font-size: 18px;
-}
-
-.modal-content input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 12px;
+.dropdown-edit {
+  margin: 10px 0 20px 0;
+  padding: 12px;
+  background-color: white;
   border: 1px solid #ddd;
   border-radius: 8px;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
 }
 
-.modal-actions {
+.dropdown-edit.show {
+  max-height: 500px;
+  opacity: 1;
+}
+
+.dropdown-edit input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.dropdown-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+.dropdown-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+  font-weight: bold;
+}
+
+.dropdown-actions button:last-child {
+  background-color: #aaa;
+}
+
+input[readonly] {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
+input:not([readonly]) {
+  background-color: #ffffff;
 }
