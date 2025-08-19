@@ -1,32 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { FiArrowLeft } from 'react-icons/fi';
-import axios from 'axios';
-import '../styles/DiaryForm.css';
-import { parseLocalDate, formatLocalDate } from '../utils/date';
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
+import axios from "axios";
+import "../styles/DiaryForm.css";
+import { parseLocalDate, formatLocalDate } from "../utils/date";
 
 function DiaryForm() {
   const location = useLocation();
   const navigate = useNavigate();
 
   const diaryDate = location.state?.selectedDate
-    ? typeof location.state.selectedDate === 'string'
+    ? typeof location.state.selectedDate === "string"
       ? parseLocalDate(location.state.selectedDate)
       : location.state.selectedDate
     : new Date();
 
-  const mode = location.state?.mode || 'create';
+  const mode = location.state?.mode || "create";
   const diaryId = location.state?.diaryId || null;
 
-  const STATUS_OPTIONS = ['좋음', '보통', '나쁨'];
-  const [status, setStatus] = useState('');
-  const [content, setContent] = useState('');
-  const [initialStatus, setInitialStatus] = useState('');
-  const [initialContent, setInitialContent] = useState('');
+  const STATUS_OPTIONS = ["좋음", "보통", "나쁨"];
+  const [status, setStatus] = useState("");
+  const [content, setContent] = useState("");
+  const [initialStatus, setInitialStatus] = useState("");
+  const [initialContent, setInitialContent] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
-    if (mode === 'edit' && diaryId) {
+    if (mode === "edit" && diaryId) {
       axios
         .get(`${import.meta.env.VITE_API_URL}/api/diaries/${diaryId}`, {
           withCredentials: true,
@@ -34,12 +34,12 @@ function DiaryForm() {
         .then((res) => {
           const entry = res.data;
 
-          setStatus(entry.status || '');
-          setContent(entry.textBody || '');
-          setInitialStatus(entry.status || '');
-          setInitialContent(entry.textBody || '');
+          setStatus(entry.status || "");
+          setContent(entry.textBody || "");
+          setInitialStatus(entry.status || "");
+          setInitialContent(entry.textBody || "");
         })
-        .catch((err) => console.error('일지 불러오기 실패:', err));
+        .catch((err) => console.error("일지 불러오기 실패:", err));
     }
   }, [mode, diaryId]);
 
@@ -50,8 +50,8 @@ function DiaryForm() {
       status,
       textBody: content,
     };
-    console.log('📤 수정 payload:', payload);
-    if (mode === 'edit') {
+    console.log("📤 수정 payload:", payload);
+    if (mode === "edit") {
       axios
         .put(
           `${import.meta.env.VITE_API_URL}/api/diaries/${diaryId}`,
@@ -59,20 +59,20 @@ function DiaryForm() {
           {
             withCredentials: true,
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
           }
         )
 
         .then(() => {
-          alert('일지가 수정되었습니다.');
-          navigate('/diary/detail', {
+          alert("일지가 수정되었습니다.");
+          navigate("/diary/detail", {
             state: { selectedDate: diaryDate, diaryId },
           });
         })
         .catch((err) => {
-          console.error('수정 실패:', err);
-          alert('수정 실패');
+          console.error("수정 실패:", err);
+          alert("수정 실패");
         });
     } else {
       axios
@@ -80,12 +80,12 @@ function DiaryForm() {
           withCredentials: true,
         })
         .then(() => {
-          alert('일지가 저장되었습니다.');
-          navigate('/diary');
+          alert("일지가 저장되었습니다.");
+          navigate("/diary");
         })
         .catch((err) => {
-          console.error('저장 실패:', err);
-          alert('저장 실패');
+          console.error("저장 실패:", err);
+          alert("저장 실패");
         });
     }
   };
@@ -104,17 +104,17 @@ function DiaryForm() {
         withCredentials: true,
       })
       .then(() => {
-        alert('일지가 삭제되었습니다.');
-        navigate('/diary');
+        alert("일지가 삭제되었습니다.");
+        navigate("/diary");
       })
-      .catch((err) => console.error('삭제 실패:', err));
+      .catch((err) => console.error("삭제 실패:", err));
   };
 
   return (
     <div className="diary-form-wrapper">
       {/* 헤더 */}
       <div className="form-header">
-        <button className="back-button" onClick={() => navigate('/diary')}>
+        <button className="back-button" onClick={() => navigate("/diary")}>
           <FiArrowLeft />
         </button>
         <div className="diary-date">{formatLocalDate(diaryDate)}</div>
@@ -126,11 +126,11 @@ function DiaryForm() {
         <div className="status-options">
           {STATUS_OPTIONS.map((label) => {
             const badgeClass =
-              label === '좋음'
-                ? 'good'
-                : label === '보통'
-                ? 'normal'
-                : 'danger';
+              label === "좋음"
+                ? "good"
+                : label === "보통"
+                ? "normal"
+                : "danger";
             return (
               <label key={label} className="status-option">
                 <input
@@ -155,9 +155,9 @@ function DiaryForm() {
 
         <div className="form-buttons">
           <button className="btn-save" onClick={handleSave}>
-            {mode === 'edit' ? '수정 완료' : '등록'}
+            {mode === "edit" ? "수정 완료" : "등록"}
           </button>
-          {mode === 'edit' && (
+          {mode === "edit" && (
             <button className="btn-cancel" onClick={handleCancel}>
               취소
             </button>

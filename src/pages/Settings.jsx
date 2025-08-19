@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import '../styles/Settings.css';
-import { parseLocalDate, formatLocalDate } from '../utils/date';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import "../styles/Settings.css";
+import { parseLocalDate, formatLocalDate } from "../utils/date";
 
 function Settings() {
   const [guardian, setGuardian] = useState(null);
@@ -12,14 +12,14 @@ function Settings() {
   const [formData, setFormData] = useState({});
 
   const formatPhone = (value) => {
-    if (!value) return '';
-    value = value.replace(/[^0-9]/g, ''); // 숫자만 남김
+    if (!value) return "";
+    value = value.replace(/[^0-9]/g, ""); // 숫자만 남김
     if (value.length <= 3) {
       return value;
     } else if (value.length <= 7) {
-      return value.replace(/(\d{3})(\d{1,4})/, '$1-$2');
+      return value.replace(/(\d{3})(\d{1,4})/, "$1-$2");
     } else {
-      return value.replace(/(\d{3})(\d{4})(\d{0,4})/, '$1-$2-$3');
+      return value.replace(/(\d{3})(\d{4})(\d{0,4})/, "$1-$2-$3");
     }
   };
 
@@ -30,14 +30,14 @@ function Settings() {
         withCredentials: true,
       })
       .then((res) => {
-        console.log('세션 정보:', res.data);
+        console.log("세션 정보:", res.data);
         setGuardian(res.data.data?.guardian || null);
         setPatient(res.data.data?.patient || null);
-        console.log('guardian:', res.data.data?.guardian);
-        console.log('patient:', res.data.data?.patient);
+        console.log("guardian:", res.data.data?.guardian);
+        console.log("patient:", res.data.data?.patient);
       })
       .catch((err) => {
-        console.error('유저 정보 불러오기 실패:', err);
+        console.error("유저 정보 불러오기 실패:", err);
       })
       .finally(() => {
         setLoading(false);
@@ -45,14 +45,14 @@ function Settings() {
   }, []);
 
   useEffect(() => {
-    if (guardian && editMode === 'guardian') {
+    if (guardian && editMode === "guardian") {
       setFormData({
-        name: guardian.name || '',
-        phone: formatPhone(guardian.phone || ''),
-        profileImageUrl: guardian.profileImageUrl || '',
+        name: guardian.name || "",
+        phone: formatPhone(guardian.phone || ""),
+        profileImageUrl: guardian.profileImageUrl || "",
         guardianBirth: guardian.guardianBirth
           ? formatLocalDate(parseLocalDate(guardian.guardianBirth))
-          : '',
+          : "",
         syncPatientLoginId: guardian.syncPatientLoginId || false,
       });
     }
@@ -66,18 +66,18 @@ function Settings() {
         null,
         { withCredentials: true }
       );
-      alert('로그아웃 되었습니다.');
-      window.location.href = '/';
+      alert("로그아웃 되었습니다.");
+      window.location.href = "/";
     } catch (err) {
-      console.error('로그아웃 실패:', err);
-      alert('로그아웃에 실패했습니다.');
+      console.error("로그아웃 실패:", err);
+      alert("로그아웃에 실패했습니다.");
     }
   };
 
   // 회원 탈퇴
 
   const handleDeleteAccount = async () => {
-    const confirmed = window.confirm('정말 회원 탈퇴하시겠습니까?');
+    const confirmed = window.confirm("정말 회원 탈퇴하시겠습니까?");
     if (!confirmed) return;
 
     try {
@@ -85,11 +85,11 @@ function Settings() {
         `${import.meta.env.VITE_API_URL}/api/v1/auth/guardian`,
         { withCredentials: true }
       );
-      alert('회원 탈퇴 완료');
-      window.location.href = '/';
+      alert("회원 탈퇴 완료");
+      window.location.href = "/";
     } catch (err) {
       alert(
-        '회원 탈퇴 실패: ' + (err.response?.data?.message || '알 수 없는 오류')
+        "회원 탈퇴 실패: " + (err.response?.data?.message || "알 수 없는 오류")
       );
       console.error(err);
     }
@@ -99,25 +99,25 @@ function Settings() {
   const openEditModal = (type) => {
     setEditMode(type);
 
-    if (type === 'guardian' && guardian) {
+    if (type === "guardian" && guardian) {
       setFormData({
-        name: guardian.name || '',
-        phone: formatPhone(guardian.phone || ''),
-        profileImageUrl: guardian.profileImageUrl || '',
+        name: guardian.name || "",
+        phone: formatPhone(guardian.phone || ""),
+        profileImageUrl: guardian.profileImageUrl || "",
         guardianBirth: guardian.guardianBirth
           ? formatLocalDate(parseLocalDate(guardian.guardianBirth))
-          : '',
+          : "",
         syncPatientLoginId: guardian.syncPatientLoginId || false,
       });
     }
-    if (type === 'patient' && patient) {
+    if (type === "patient" && patient) {
       setFormData({
-        name: patient.name || '',
+        name: patient.name || "",
         patientBirth: patient.patientBirth
           ? formatLocalDate(parseLocalDate(patient.patientBirth))
-          : '',
-        newPassword1: '',
-        newPassword2: '',
+          : "",
+        newPassword1: "",
+        newPassword2: "",
       });
     }
   };
@@ -127,7 +127,7 @@ function Settings() {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -137,36 +137,36 @@ function Settings() {
       let payload = { ...formData };
 
       // 날짜는 항상 YYYY-MM-DD 형식으로 변환
-      if (editMode === 'guardian' && formData.guardianBirth) {
+      if (editMode === "guardian" && formData.guardianBirth) {
         payload.guardianBirth = formatLocalDate(
           parseLocalDate(formData.guardianBirth)
         );
       }
-      if (editMode === 'patient' && formData.patientBirth) {
+      if (editMode === "patient" && formData.patientBirth) {
         payload.patientBirth = formatLocalDate(
           parseLocalDate(formData.patientBirth)
         );
       }
 
-      if (editMode === 'guardian') {
+      if (editMode === "guardian") {
         await axios.put(
           `${import.meta.env.VITE_API_URL}/api/v1/auth/guardian`,
           payload,
           { withCredentials: true }
         );
-        alert('보호자 정보가 수정되었습니다.');
-      } else if (editMode === 'patient') {
+        alert("보호자 정보가 수정되었습니다.");
+      } else if (editMode === "patient") {
         await axios.put(
           `${import.meta.env.VITE_API_URL}/api/v1/auth/patientinfo`,
           payload,
           { withCredentials: true }
         );
-        alert('환자 정보가 수정되었습니다.');
+        alert("환자 정보가 수정되었습니다.");
       }
       setEditMode(null);
       window.location.reload(); // 수정 후 새로고침
     } catch (err) {
-      alert('수정 실패: ' + (err.response?.data?.message || '알 수 없는 오류'));
+      alert("수정 실패: " + (err.response?.data?.message || "알 수 없는 오류"));
       console.error(err);
     }
   };
@@ -195,7 +195,7 @@ function Settings() {
             <div className="profile-img-placeholder" aria-hidden="true"></div>
           )}
           <div className="profile-name">
-            {guardian?.name ? `${guardian.name}님` : '이름 없음'}
+            {guardian?.name ? `${guardian.name}님` : "이름 없음"}
           </div>
         </div>
 
@@ -204,7 +204,7 @@ function Settings() {
             <div className="label">보호자 프로필 수정</div>
             <button
               className="action-btn"
-              onClick={() => openEditModal('guardian')}
+              onClick={() => openEditModal("guardian")}
             >
               ➔
             </button>
@@ -214,7 +214,7 @@ function Settings() {
             <div className="label">환자 프로필 수정</div>
             <button
               className="action-btn"
-              onClick={() => openEditModal('patient')}
+              onClick={() => openEditModal("patient")}
             >
               ➔
             </button>
@@ -240,12 +240,12 @@ function Settings() {
       {editMode && (
         <div className="modal">
           <div className="modal-content">
-            {console.log('✅ 렌더링 시 formData.phone:', formData.phone)}
+            {console.log("✅ 렌더링 시 formData.phone:", formData.phone)}
             <h3>
-              {editMode === 'guardian' ? '보호자 정보 수정' : '환자 정보 수정'}
+              {editMode === "guardian" ? "보호자 정보 수정" : "환자 정보 수정"}
             </h3>
             <form>
-              {editMode === 'guardian' && (
+              {editMode === "guardian" && (
                 <>
                   <input
                     type="text"
@@ -259,13 +259,12 @@ function Settings() {
                     type="text"
                     name="phone"
                     placeholder="전화번호"
-                    value={formData.phone || formatPhone(guardian?.phone) || ''}
+                    value={formData.phone || formatPhone(guardian?.phone) || ""}
                     onChange={(e) => {
                       const value = formatPhone(e.target.value);
                       setFormData((prev) => ({ ...prev, phone: value }));
                     }}
                   />
-
                   {/* <input
                     type="date"
                     name="guardianBirth"
@@ -283,7 +282,7 @@ function Settings() {
                   </label> */}
                 </>
               )}
-              {editMode === 'patient' && (
+              {editMode === "patient" && (
                 <>
                   <input
                     type="text"
