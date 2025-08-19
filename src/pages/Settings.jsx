@@ -266,12 +266,12 @@ function Settings() {
                     }}
                   />
 
-                  <input
+                  {/* <input
                     type="date"
                     name="guardianBirth"
                     value={formData.guardianBirth || ''}
                     onChange={handleChange}
-                  />
+                  /> */}
                   {/* <label>
                     환자 로그인 ID 동기화
                     <input
@@ -292,12 +292,12 @@ function Settings() {
                     value={formData.name}
                     onChange={handleChange}
                   />
-                  <input
+                  {/* <input
                     type="date"
                     name="patientBirth"
                     value={formData.patientBirth || ''}
                     onChange={handleChange}
-                  />
+                  /> */}
                   <input
                     type="password"
                     name="newPassword1"
