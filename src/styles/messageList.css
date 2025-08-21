@@ -436,7 +436,7 @@
   padding: 4px 6px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  font-size: 11px;
+  font-size: 10px;
   cursor: pointer;
   background: #fff;
 }
@@ -456,6 +456,7 @@
 
 .cycle-input {
   width: 40px;
+  height: 25px;
   padding: 2px 4px;
   border: 1px solid #ccc;
   border-radius: 4px;

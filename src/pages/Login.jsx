@@ -18,9 +18,7 @@ const Login = () => {
 
           <div className="slogan-box">
             <h1 className="welcome-text">Eye Message</h1>
-            <span className="sub-text">
-              와상환자와 보호자를 위한 의사소통 플랫폼
-            </span>
+            <span className="sub-text">환자와 보호자를 위한 소통 플랫폼</span>
           </div>
         </div>
 

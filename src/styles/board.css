@@ -68,10 +68,11 @@
 .search-section {
   margin-bottom: 16px;
   overflow: hidden;
-  max-height: $ {
-    showsearchbar?'60px': "0px";
-  }
   transition: max-height 0.3s ease;
+}
+
+.search-section.showsearchbar {
+  max-height: 60px; /* showsearchbar가 true일 때 */
 }
 
 .search-input {

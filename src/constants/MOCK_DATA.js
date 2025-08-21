@@ -126,4 +126,77 @@ const MESSAGE_DATA = [
     isConfirmed: false,
   },
 ];
-export { BOARD_DATA, MESSAGE_DATA };
+
+const MESSAGES_DATA = [
+  {
+    id: 1,
+    content: "물 좀 주세요.",
+    isEditing: false,
+    alertCycle: 15,
+    status: "HIGH",
+  },
+  {
+    id: 2,
+    content: "간호사를 불러주세요.",
+    isEditing: false,
+    alertCycle: 5,
+    status: "HIGH",
+  },
+  {
+    id: 3,
+    content: "목에 가래가 끼었습니다. 도와주세요.",
+    isEditing: false,
+    alertCycle: 10,
+    status: "HIGH",
+  },
+  {
+    id: 4,
+    content: "체위를 바꿔주세요.",
+    isEditing: false,
+    alertCycle: 20,
+    status: "MEDIUM",
+  },
+  {
+    id: 5,
+    content: "화장실에 가고 싶습니다.",
+    isEditing: false,
+    alertCycle: 15,
+    status: "HIGH",
+  },
+  {
+    id: 6,
+    content: "TV 채널을 바꿔주세요.",
+    isEditing: false,
+    alertCycle: 60,
+    status: "LOW",
+  },
+  {
+    id: 7,
+    content: "조명이 너무 밝습니다. 줄여주세요.",
+    isEditing: false,
+    alertCycle: 45,
+    status: "LOW",
+  },
+  {
+    id: 8,
+    content: "추워요. 이불을 덮어주세요.",
+    isEditing: false,
+    alertCycle: 30,
+    status: "MEDIUM",
+  },
+  {
+    id: 9,
+    content: "더워요. 창문을 열어주세요.",
+    isEditing: false,
+    alertCycle: 30,
+    status: "MEDIUM",
+  },
+  {
+    id: 10,
+    content: "약 먹을 시간이에요.",
+    isEditing: false,
+    alertCycle: 120,
+    status: "HIGH",
+  },
+];
+export { BOARD_DATA, MESSAGE_DATA, MESSAGES_DATA };

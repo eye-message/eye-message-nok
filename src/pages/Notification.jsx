@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "../styles/notification.css";
-import { MESSAGE_DATA } from "../constants/MOCK_DATA";
+// import { MESSAGE_DATA } from "../constants/MOCK_DATA";
 
 const Notification = () => {
   const [notifications, setNotifications] = useState([]);
@@ -11,6 +11,36 @@ const Notification = () => {
   const [loading, setLoading] = useState(true);
   const [longPressId, setLongPressId] = useState(null);
   const longPressTimer = useRef(null);
+
+  const MESSAGE_DATA = [
+    {
+      id: 1,
+      type: "normal",
+      message: "물 마시고 싶어요",
+      timestamp: new Date(Date.now() - 30 * 60000).toISOString(),
+      isRead: false,
+      isConfirmed: false,
+      renderTime: "9:29:08",
+    },
+    {
+      id: 2,
+      type: "normal",
+      message: "자세 바꿔주세요",
+      timestamp: new Date(Date.now() - 75 * 60000).toISOString(),
+      isRead: false,
+      isConfirmed: false,
+      renderTime: "9:40:24",
+    },
+    {
+      id: 3,
+      type: "emergency",
+      message: "보호자 호출",
+      timestamp: new Date(Date.now() - 3 * 3600000).toISOString(),
+      isRead: false,
+      isConfirmed: false,
+      renderTime: "9:40:29",
+    },
+  ];
 
   useEffect(() => {
     fetchNotifications();
@@ -26,8 +56,20 @@ const Notification = () => {
 
       // Mock 데이터 (서버 응답 시뮬레이션)
       setTimeout(() => {
-        setNotifications(MESSAGE_DATA);
         setLoading(false);
+
+        // 첫 번째 알림: 로딩 끝나자마자 (오후 9:29:08)
+        setNotifications([MESSAGE_DATA[0]]);
+
+        // 두 번째 알림: 11.16초 후 (오후 9:40:24)
+        setTimeout(() => {
+          setNotifications((prev) => [...prev, MESSAGE_DATA[1]]);
+        }, 11160);
+
+        // 세 번째 알림: 16.16초 후 (오후 9:40:29)
+        setTimeout(() => {
+          setNotifications((prev) => [...prev, MESSAGE_DATA[2]]);
+        }, 16160);
       }, 800);
     } catch (error) {
       console.error("Failed to fetch notifications:", error);
@@ -198,9 +240,7 @@ const Notification = () => {
                     {/* 컨텐츠 */}
                     <div className="notification-content-area">
                       <p className="notification-message">{n.message}</p>
-                      <p className="notification-time">
-                        {formatTimeAgo(n.timestamp)}
-                      </p>
+                      <p className="notification-time">{n.renderTime}</p>
                     </div>
 
                     {/* 확인 버튼 */}

@@ -9,7 +9,7 @@
 
 .form-header {
   background: white;
-  padding: 16px 20px;
+  padding: 4px 20px;
   border-bottom: 1px solid #e9ecef;
   position: sticky;
   top: 0;
@@ -43,7 +43,7 @@
 }
 
 .form-content {
-  padding: 24px 20px;
+  padding: 17px 20px 0 20px;
 }
 
 .section {
@@ -112,7 +112,8 @@
 }
 
 .selected-urgency-info {
-  padding: 16px;
+  padding: 11px 16px;
+  font-size: 14px;
   border-radius: 12px;
   margin-bottom: 16px;
   border-left: 4px solid;

@@ -10,7 +10,7 @@
 /* 헤더 */
 .form-header {
   background-color: white;
-  padding: 20px;
+  padding: 4px 20px;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -79,7 +79,7 @@
 }
 
 .status-badge {
-  min-width: 45px;
+  min-width: 28px;
   text-align: center;
   padding: 8px 14px;
   border-radius: 20px;

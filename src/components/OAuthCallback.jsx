@@ -16,14 +16,17 @@ function OAuthCallback() {
       credentials: "include", // 세션 쿠키 포함
     })
       .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setUser(data.data);
-          // { "userId": 1004, "role": "GUARDIAN", "name": "홍길동", "profileImageUrl": "http://img.jpg" }
+      .then((result) => {
+        if (result.success) {
+          console.log("result", result);
+          setUser(result.data);
+
           if (nextStep === "NEED_PATIENT_REGISTRATION") {
-            navigate("/signup", { state: { user: data.data } });
+            navigate("/signup", { state: { user: result.data } });
+          } else if (nextStep === "GO_TO_GUARDIAN_HOME") {
+            navigate("/notification", { state: { user: result.data } });
           } else {
-            navigate("/notification", { state: { user: data.data } });
+            navigate("/notification", { state: { user: result.data } });
           }
         } else {
           navigate("/login");

@@ -3,81 +3,10 @@ import "../styles/messageList.css";
 import axios from "axios";
 import { API_URL } from "../constants/config";
 import { useNavigate } from "react-router-dom";
+import { MESSAGES_DATA } from "../constants/MOCK_DATA";
 
 const MessageList = () => {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      content: "물 좀 주세요.",
-      isEditing: false,
-      alertCycle: 15,
-      status: "HIGH",
-    },
-    {
-      id: 2,
-      content: "간호사를 불러주세요.",
-      isEditing: false,
-      alertCycle: 5,
-      status: "HIGH",
-    },
-    {
-      id: 3,
-      content: "목에 가래가 끼었습니다. 도와주세요.",
-      isEditing: false,
-      alertCycle: 10,
-      status: "HIGH",
-    },
-    {
-      id: 4,
-      content: "체위를 바꿔주세요.",
-      isEditing: false,
-      alertCycle: 20,
-      status: "MEDIUM",
-    },
-    {
-      id: 5,
-      content: "화장실에 가고 싶습니다.",
-      isEditing: false,
-      alertCycle: 15,
-      status: "HIGH",
-    },
-    {
-      id: 6,
-      content: "TV 채널을 바꿔주세요.",
-      isEditing: false,
-      alertCycle: 60,
-      status: "LOW",
-    },
-    {
-      id: 7,
-      content: "조명이 너무 밝습니다. 줄여주세요.",
-      isEditing: false,
-      alertCycle: 45,
-      status: "LOW",
-    },
-    {
-      id: 8,
-      content: "추워요. 이불을 덮어주세요.",
-      isEditing: false,
-      alertCycle: 30,
-      status: "MEDIUM",
-    },
-    {
-      id: 9,
-      content: "더워요. 창문을 열어주세요.",
-      isEditing: false,
-      alertCycle: 30,
-      status: "MEDIUM",
-    },
-    {
-      id: 10,
-      content: "약 먹을 시간이에요.",
-      isEditing: false,
-      alertCycle: 120,
-      status: "HIGH",
-    },
-  ]);
-
+  const [messages, setMessages] = useState([]);
   const [selectedItems, setSelectedItems] = useState(new Set());
   const [activeItemId, setActiveItemId] = useState(null);
   const [editingContent, setEditingContent] = useState("");
@@ -85,6 +14,7 @@ const MessageList = () => {
   const [editingCycle, setEditingCycle] = useState("");
   const [filterStatus, setFilterStatus] = useState("ALL");
   const navigate = useNavigate();
+
   useEffect(() => {
     axios
       .get(`${API_URL}/api/v1/template/guardian/list`, {
@@ -99,7 +29,7 @@ const MessageList = () => {
           alertCycle: item.alertCycle,
           isEditing: false,
         }));
-        setMessages([...messages, ...mapped]);
+        setMessages([...MESSAGES_DATA, ...mapped]);
       })
       .catch((err) => {
         console.error("메시지 불러오기 실패", err);
@@ -423,7 +353,7 @@ const MessageList = () => {
                               min="1"
                               max="1440"
                             />
-                            <span className="cycle-unit">분</span>
+                            <span className="cycle-unit">초</span>
                           </div>
                         </div>
                       </div>
