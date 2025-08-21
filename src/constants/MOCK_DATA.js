@@ -76,4 +76,127 @@ const BOARD_DATA = [
   },
 ];
 
-export { BOARD_DATA };
+const MESSAGE_DATA = [
+  {
+    id: 1,
+    type: "emergency",
+    message: "즉시 확인이 필요합니다. 안전을 위해 연락주세요!",
+    timestamp: new Date(Date.now() - 30 * 60000).toISOString(),
+    isRead: false,
+    isConfirmed: false,
+  },
+  {
+    id: 2,
+    type: "normal",
+    message: "약 복용 시간입니다. 물과 함께 드세요.",
+    timestamp: new Date(Date.now() - 75 * 60000).toISOString(),
+    isRead: true,
+    isConfirmed: true,
+  },
+  {
+    id: 3,
+    type: "good",
+    message: "오늘 하루도 건강하게 보내세요! 항상 응원하고 있어요.",
+    timestamp: new Date(Date.now() - 3 * 3600000).toISOString(),
+    isRead: true,
+    isConfirmed: false,
+  },
+  {
+    id: 4,
+    type: "normal",
+    message: "건강 체크 시간이에요. 혈압을 측정해주세요.",
+    timestamp: new Date(Date.now() - 5 * 3600000).toISOString(),
+    isRead: false,
+    isConfirmed: false,
+  },
+  {
+    id: 5,
+    type: "good",
+    message: "컨디션이 좋아 보여서 기뻐요. 계속 잘 지내세요!",
+    timestamp: new Date(Date.now() - 8 * 3600000).toISOString(),
+    isRead: true,
+    isConfirmed: true,
+  },
+  {
+    id: 6,
+    type: "normal",
+    message: "오늘 날씨가 좋네요. 산책 한 번 다녀오시는 건 어떨까요?",
+    timestamp: new Date(Date.now() - 24 * 3600000).toISOString(),
+    isRead: true,
+    isConfirmed: false,
+  },
+];
+
+const MESSAGES_DATA = [
+  {
+    id: 1,
+    content: "물 좀 주세요.",
+    isEditing: false,
+    alertCycle: 15,
+    status: "HIGH",
+  },
+  {
+    id: 2,
+    content: "간호사를 불러주세요.",
+    isEditing: false,
+    alertCycle: 5,
+    status: "HIGH",
+  },
+  {
+    id: 3,
+    content: "목에 가래가 끼었습니다. 도와주세요.",
+    isEditing: false,
+    alertCycle: 10,
+    status: "HIGH",
+  },
+  {
+    id: 4,
+    content: "체위를 바꿔주세요.",
+    isEditing: false,
+    alertCycle: 20,
+    status: "MEDIUM",
+  },
+  {
+    id: 5,
+    content: "화장실에 가고 싶습니다.",
+    isEditing: false,
+    alertCycle: 15,
+    status: "HIGH",
+  },
+  {
+    id: 6,
+    content: "TV 채널을 바꿔주세요.",
+    isEditing: false,
+    alertCycle: 60,
+    status: "LOW",
+  },
+  {
+    id: 7,
+    content: "조명이 너무 밝습니다. 줄여주세요.",
+    isEditing: false,
+    alertCycle: 45,
+    status: "LOW",
+  },
+  {
+    id: 8,
+    content: "추워요. 이불을 덮어주세요.",
+    isEditing: false,
+    alertCycle: 30,
+    status: "MEDIUM",
+  },
+  {
+    id: 9,
+    content: "더워요. 창문을 열어주세요.",
+    isEditing: false,
+    alertCycle: 30,
+    status: "MEDIUM",
+  },
+  {
+    id: 10,
+    content: "약 먹을 시간이에요.",
+    isEditing: false,
+    alertCycle: 120,
+    status: "HIGH",
+  },
+];
+export { BOARD_DATA, MESSAGE_DATA, MESSAGES_DATA };

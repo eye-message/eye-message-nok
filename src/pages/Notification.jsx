@@ -1,53 +1,81 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "../styles/notification.css";
+// import { MESSAGE_DATA } from "../constants/MOCK_DATA";
 
 const Notification = () => {
-  const [notifications, setNotifications] = useState([
+  const [notifications, setNotifications] = useState([]);
+  const [swipedItemId, setSwipedItemId] = useState(null);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchCurrent, setTouchCurrent] = useState(0);
+
+  const [loading, setLoading] = useState(true);
+  const [longPressId, setLongPressId] = useState(null);
+  const longPressTimer = useRef(null);
+
+  const MESSAGE_DATA = [
     {
       id: 1,
-      type: "emergency",
-      message: "즉시 확인이 필요합니다. 안전을 위해 연락주세요!",
-      timestamp: "2024-08-04T14:30:00",
+      type: "normal",
+      message: "물 마시고 싶어요",
+      timestamp: new Date(Date.now() - 30 * 60000).toISOString(),
       isRead: false,
       isConfirmed: false,
+      renderTime: "9:29:08",
     },
     {
       id: 2,
       type: "normal",
-      message: "약 복용 시간입니다. 물과 함께 드세요.",
-      timestamp: "2024-08-04T13:15:00",
-      isRead: true,
-      isConfirmed: true,
+      message: "자세 바꿔주세요",
+      timestamp: new Date(Date.now() - 75 * 60000).toISOString(),
+      isRead: false,
+      isConfirmed: false,
+      renderTime: "9:40:24",
     },
     {
       id: 3,
-      type: "good",
-      message: "오늘 하루도 건강하게 보내세요! 항상 응원하고 있어요.",
-      timestamp: "2024-08-04T10:45:00",
-      isRead: true,
-      isConfirmed: false,
-    },
-    {
-      id: 4,
-      type: "normal",
-      message: "건강 체크 시간이에요. 혈압을 측정해주세요.",
-      timestamp: "2024-08-04T09:20:00",
+      type: "emergency",
+      message: "보호자 호출",
+      timestamp: new Date(Date.now() - 3 * 3600000).toISOString(),
       isRead: false,
       isConfirmed: false,
+      renderTime: "9:40:29",
     },
-    {
-      id: 5,
-      type: "good",
-      message: "컨디션이 좋아 보여서 기뻐요. 계속 잘 지내세요!",
-      timestamp: "2024-08-04T08:00:00",
-      isRead: true,
-      isConfirmed: true,
-    },
-  ]);
+  ];
 
-  const [swipedItemId, setSwipedItemId] = useState(null);
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchCurrent, setTouchCurrent] = useState(0);
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  const fetchNotifications = async () => {
+    setLoading(true);
+    try {
+      // 실제 API 호출로 교체
+      // const response = await fetch('/api/notifications');
+      // const data = await response.json();
+      // setNotifications(data);
+
+      // Mock 데이터 (서버 응답 시뮬레이션)
+      setTimeout(() => {
+        setLoading(false);
+
+        // 첫 번째 알림: 로딩 끝나자마자 (오후 9:29:08)
+        setNotifications([MESSAGE_DATA[0]]);
+
+        // 두 번째 알림: 11.16초 후 (오후 9:40:24)
+        setTimeout(() => {
+          setNotifications((prev) => [...prev, MESSAGE_DATA[1]]);
+        }, 11160);
+
+        // 세 번째 알림: 16.16초 후 (오후 9:40:29)
+        setTimeout(() => {
+          setNotifications((prev) => [...prev, MESSAGE_DATA[2]]);
+        }, 16160);
+      }, 800);
+    } catch (error) {
+      console.error("Failed to fetch notifications:", error);
+      setLoading(false);
+    }
+  };
 
   const getTypeIcon = (type) => {
     const icons = {
@@ -57,9 +85,6 @@ const Notification = () => {
     };
     return icons[type] || "📱";
   };
-
-  const [longPressId, setLongPressId] = useState(null);
-  const longPressTimer = useRef(null);
 
   const handleTouchStart = (e, id) => {
     setTouchStart(e.touches[0].clientX);
@@ -95,11 +120,13 @@ const Notification = () => {
     if (diffX < -50) setSwipedItemId(null); // 오른쪽 스와이프 → 원복
     setTouchStart(0);
     setTouchCurrent(0);
-    // 스와이프 끝나면 힌트 숨김
     setLongPressId(null);
   };
 
-  const handleConfirmToggle = (id) => {
+  const handleConfirmToggle = async (id) => {
+    // API 호출
+    // await fetch(`/api/notifications/${id}/confirm`, { method: 'PUT' });
+
     setNotifications((prev) =>
       prev.map((n) =>
         n.id === id ? { ...n, isConfirmed: !n.isConfirmed, isRead: true } : n
@@ -138,16 +165,20 @@ const Notification = () => {
     setSwipedItemId(null);
   };
 
-  const handleDeleteConfirmed = () => {
-    const confirmedCount = notifications.filter(
-      (notif) => notif.isConfirmed
-    ).length;
-    if (confirmedCount === 0) {
-      alert("삭제할 확인된 메세지가 없습니다.");
-      return;
-    }
+  const handleDeleteConfirmed = async () => {
+    const confirmedIds = notifications
+      .filter((notif) => notif.isConfirmed)
+      .map((n) => n.id);
 
-    if (confirm(`확인된 메세지 ${confirmedCount}개를 삭제하시겠습니까?`)) {
+    if (confirmedIds.length === 0) return;
+
+    if (confirm(`확인된 메시지 ${confirmedIds.length}개를 삭제하시겠습니까?`)) {
+      // API 호출
+      // await fetch('/api/notifications/bulk-delete', {
+      //   method: 'DELETE',
+      //   body: JSON.stringify({ ids: confirmedIds })
+      // });
+
       setNotifications(notifications.filter((notif) => !notif.isConfirmed));
     }
   };
@@ -159,77 +190,81 @@ const Notification = () => {
 
   return (
     <div className="notification-container">
+      {/* 헤더 */}
       <div className="notification-header">
-        <div className="header-content">
+        <div className="header-top">
           <h1 className="header-title">알림</h1>
           {unreadCount > 0 && (
             <span className="unread-badge">{unreadCount}</span>
           )}
         </div>
+        <p className="header-subtitle">오늘의 소식을 확인하세요</p>
       </div>
 
-      {notifications.length === 0 ? (
-        <div className="empty-state">
-          <div className="empty-icon">🔔</div>
-          <div className="empty-title">알림이 없습니다</div>
-          <div className="empty-description">
-            새로운 메세지가 오면
-            <br />
-            여기에 표시됩니다
+      {/* 메시지 영역 - 스크롤 가능 */}
+      <div className="notification-content">
+        {loading ? (
+          <div className="loading-state">
+            <div className="loading-spinner"></div>
+            <p className="loading-text">알림을 불러오는 중...</p>
           </div>
-        </div>
-      ) : (
-        <>
+        ) : notifications.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-icon">🔔</div>
+            <h3 className="empty-title">알림이 없습니다</h3>
+            <p className="empty-description">
+              새로운 소식이 도착하면
+              <br />
+              여기에 표시됩니다
+            </p>
+          </div>
+        ) : (
           <div className="notifications-list">
             {notifications.map((n) => (
               <div
                 key={n.id}
-                className="notification-item"
+                className="notification-item-wrapper"
                 onTouchStart={(e) => handleTouchStart(e, n.id)}
                 onTouchMove={(e) => handleTouchMove(e, n.id)}
                 onTouchEnd={(e) => handleTouchEnd(e, n.id)}
               >
                 <div
-                  className={`notification-row ${n.type} ${
+                  className={`notification-item ${n.type} ${
                     !n.isRead ? "unread" : ""
                   } ${swipedItemId === n.id ? "swiped" : ""}`}
                 >
-                  {/* 왼쪽: 타입 태그 */}
-                  <div className="type-pill" aria-label={n.type}>
-                    {getTypeIcon(n.type)}
-                  </div>
+                  <div className="notification-body">
+                    {/* 아이콘 */}
+                    <div className={"type-icon"}>{getTypeIcon(n.type)}</div>
 
-                  {/* 가운데: 메시지 + 시간(오른쪽 하단) */}
-                  <div className="message-wrap">
-                    <div className="message-text">{n.message}</div>
-                  </div>
-
-                  {/* 오른쪽: 버튼 + 시간 (여기에 시간 이동) */}
-                  <div className="right-rail">
-                    <button
-                      className={`confirm-toggle ${n.isConfirmed ? "on" : ""}`}
-                      onClick={() => handleConfirmToggle(n.id)}
-                    >
-                      {n.isConfirmed ? "확인함" : "확인"}
-                    </button>
-
-                    <div className="time">
-                      <span>{formatTime(n.timestamp)}</span>
-                      <span className="dot">•</span>
-                      <span>{formatTimeAgo(n.timestamp)}</span>
+                    {/* 컨텐츠 */}
+                    <div className="notification-content-area">
+                      <p className="notification-message">{n.message}</p>
+                      <p className="notification-time">{n.renderTime}</p>
                     </div>
+
+                    {/* 확인 버튼 */}
+                    <button
+                      onClick={() => handleConfirmToggle(n.id)}
+                      className={`confirm-btn ${
+                        n.isConfirmed ? "confirmed" : ""
+                      }`}
+                    >
+                      {n.isConfirmed ? "확인됨" : "확인"}
+                    </button>
                   </div>
 
-                  {/* 롱프레스 힌트 (해당 아이템에만) */}
+                  {/* 롱프레스 힌트 */}
                   {longPressId === n.id && swipedItemId !== n.id && (
                     <div className="swipe-hint">← 밀어서 삭제</div>
                   )}
                 </div>
 
+                {/* 삭제 버튼 */}
                 {swipedItemId === n.id && (
                   <button
-                    className="swipe-delete-btn"
                     onClick={() => handleDeleteNotification(n.id)}
+                    className="delete-btn"
                   >
                     삭제
                   </button>
@@ -237,18 +272,21 @@ const Notification = () => {
               </div>
             ))}
           </div>
+        )}
+      </div>
 
-          <div className="bottom-actions">
-            <button
-              className="delete-confirmed-btn"
-              onClick={handleDeleteConfirmed}
-              disabled={confirmedCount === 0}
-            >
-              확인한 메세지 삭제 ({confirmedCount}개)
-            </button>
-          </div>
-        </>
-      )}
+      {/* 하단 고정 영역 */}
+      <div className="notification-footer">
+        <button
+          onClick={handleDeleteConfirmed}
+          disabled={confirmedCount === 0}
+          className={`bulk-delete-btn ${
+            confirmedCount === 0 ? "disabled" : ""
+          }`}
+        >
+          확인한 메시지 {confirmedCount > 0 && `${confirmedCount}개`} 삭제
+        </button>
+      </div>
     </div>
   );
 };

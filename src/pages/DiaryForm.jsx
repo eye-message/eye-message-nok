@@ -4,6 +4,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import axios from "axios";
 import "../styles/DiaryForm.css";
 import { parseLocalDate, formatLocalDate } from "../utils/date";
+import { API_URL } from "../constants/config";
 
 function DiaryForm() {
   const location = useLocation();
@@ -28,7 +29,7 @@ function DiaryForm() {
   useEffect(() => {
     if (mode === "edit" && diaryId) {
       axios
-        .get(`${import.meta.env.VITE_API_URL}/api/diaries/${diaryId}`, {
+        .get(`${API_URL}/api/diaries/${diaryId}`, {
           withCredentials: true,
         })
         .then((res) => {
@@ -53,16 +54,12 @@ function DiaryForm() {
     console.log("📤 수정 payload:", payload);
     if (mode === "edit") {
       axios
-        .put(
-          `${import.meta.env.VITE_API_URL}/api/diaries/${diaryId}`,
-          payload,
-          {
-            withCredentials: true,
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        .put(`${API_URL}/api/diaries/${diaryId}`, payload, {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
 
         .then(() => {
           alert("일지가 수정되었습니다.");
@@ -76,7 +73,7 @@ function DiaryForm() {
         });
     } else {
       axios
-        .post(`${import.meta.env.VITE_API_URL}/api/diaries`, payload, {
+        .post(`${API_URL}/api/diaries`, payload, {
           withCredentials: true,
         })
         .then(() => {
@@ -100,7 +97,7 @@ function DiaryForm() {
     if (!diaryId) return;
 
     axios
-      .delete(`${import.meta.env.VITE_API_URL}/api/diaries/${diaryId}`, {
+      .delete(`${API_URL}/api/diaries/${diaryId}`, {
         withCredentials: true,
       })
       .then(() => {

@@ -4,6 +4,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import axios from "axios";
 import "../styles/DiaryDetail.css";
 import { parseLocalDate, formatLocalDate } from "../utils/date";
+import { API_URL } from "../constants/config";
 
 function DiaryDetail() {
   const location = useLocation();
@@ -19,12 +20,11 @@ function DiaryDetail() {
 
   const [status, setStatus] = useState("");
   const [content, setContent] = useState("");
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     if (diaryId) {
       axios
-        .get(`http://localhost:8080/api/diaries/${diaryId}`, {
+        .get(`${API_URL}/api/diaries/${diaryId}`, {
           withCredentials: true,
         })
         .then((res) => {
@@ -40,7 +40,7 @@ function DiaryDetail() {
 
   const handleDelete = () => {
     axios
-      .delete(`http://localhost:8080/api/diaries/${diaryId}`, {
+      .delete(`${API_URL}/api/diaries/${diaryId}`, {
         withCredentials: true,
       })
       .then(() => {

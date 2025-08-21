@@ -137,8 +137,7 @@ const MessageAddForm = () => {
                 }`}
                 onClick={() => handleUrgencySelect(type.id)}
               >
-                <div className="tag-label">{type.label}</div>
-                <div className="tag-description">{type.description}</div>
+                {type.label}
               </div>
             ))}
           </div>
@@ -182,14 +181,8 @@ const MessageAddForm = () => {
               step="30"
               value={formData.repeatInterval}
               onChange={(e) => handleIntervalChange(e.target.value)}
+              resize="none"
             />
-
-            <div className="current-interval">
-              <div className="current-interval-value">
-                {formatTime(formData.repeatInterval)}
-              </div>
-              <div className="current-interval-label">반복 간격</div>
-            </div>
           </div>
         )}
 
@@ -208,102 +201,17 @@ const MessageAddForm = () => {
           />
           <div className="char-counter">{formData.content.length}/200</div>
 
-          {selectedType && (
-            <div className="template-suggestions">
-              <div className="template-title">💡 추천 템플릿</div>
-              {selectedType.id === "emergency" && (
-                <>
-                  <div
-                    className="template-item"
-                    onClick={() =>
-                      setFormData({
-                        ...formData,
-                        content:
-                          "🚨 즉시 확인이 필요합니다. 안전을 위해 연락주세요!",
-                      })
-                    }
-                  >
-                    🚨 즉시 확인이 필요합니다. 안전을 위해 연락주세요!
-                  </div>
-                  <div
-                    className="template-item"
-                    onClick={() =>
-                      setFormData({
-                        ...formData,
-                        content: "⚠️ 긴급 상황입니다. 즉시 대응해주세요.",
-                      })
-                    }
-                  >
-                    ⚠️ 긴급 상황입니다. 즉시 대응해주세요.
-                  </div>
-                </>
-              )}
-              {selectedType.id === "normal" && (
-                <>
-                  <div
-                    className="template-item"
-                    onClick={() =>
-                      setFormData({
-                        ...formData,
-                        content: "💊 약 복용 시간입니다. 물과 함께 드세요.",
-                      })
-                    }
-                  >
-                    💊 약 복용 시간입니다. 물과 함께 드세요.
-                  </div>
-                  <div
-                    className="template-item"
-                    onClick={() =>
-                      setFormData({
-                        ...formData,
-                        content:
-                          "🏥 건강 체크 시간이에요. 혈압을 측정해주세요.",
-                      })
-                    }
-                  >
-                    🏥 건강 체크 시간이에요. 혈압을 측정해주세요.
-                  </div>
-                </>
-              )}
-              {selectedType.id === "good" && (
-                <>
-                  <div
-                    className="template-item"
-                    onClick={() =>
-                      setFormData({
-                        ...formData,
-                        content:
-                          "😊 오늘 하루도 건강하게 보내세요! 항상 응원하고 있어요.",
-                      })
-                    }
-                  >
-                    😊 오늘 하루도 건강하게 보내세요! 항상 응원하고 있어요.
-                  </div>
-                  <div
-                    className="template-item"
-                    onClick={() =>
-                      setFormData({
-                        ...formData,
-                        content:
-                          "💝 컨디션이 좋아 보여서 기뻐요. 계속 잘 지내세요!",
-                      })
-                    }
-                  >
-                    💝 컨디션이 좋아 보여서 기뻐요. 계속 잘 지내세요!
-                  </div>
-                </>
-              )}
-            </div>
-          )}
           {formData.content && (
-            <div className="preview-card">
+            <>
               <div className="preview-title">📱 환자 화면 미리보기</div>
-              <div className="preview-message">{formData.content}</div>
-              <div className="preview-meta">
-                {selectedType?.label} • {formatTime(formData.repeatInterval)}{" "}
-                반복
+              <div className="preview-card">
+                <div className="preview-message">{formData.content}</div>
+                <div className="preview-meta">
+                  {selectedType?.label} • {formatTime(formData.repeatInterval)}{" "}
+                  반복
+                </div>
               </div>
-            </div>
+            </>
           )}
         </div>
 

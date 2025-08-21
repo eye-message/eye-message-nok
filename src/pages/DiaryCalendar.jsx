@@ -6,6 +6,7 @@ import axios from "axios";
 import "react-calendar/dist/Calendar.css";
 import "../styles/DiaryCalendar.css";
 import { parseLocalDate, formatLocalDate } from "../utils/date";
+import { API_URL } from "../constants/config";
 
 function DiaryCalendar() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ function DiaryCalendar() {
   useEffect(() => {
     // 1) 세션 유저 확인
     axios
-      .get(`${import.meta.env.VITE_API_URL}/api/v1/auth/check/currentinfo`, {
+      .get(`${API_URL}/api/v1/auth/check/currentinfo`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -27,7 +28,7 @@ function DiaryCalendar() {
           console.log("✅ 세션 유저 ID:", id);
 
           // 2) 다이어리 목록 가져오기
-          return axios.get(`${import.meta.env.VITE_API_URL}/api/diaries`, {
+          return axios.get(`${API_URL}/api/diaries`, {
             withCredentials: true,
           });
         } else {
@@ -61,13 +62,10 @@ function DiaryCalendar() {
     const dateKey = formatLocalDate(selectedDate);
 
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/diaries/check`,
-        {
-          params: { date: dateKey },
-          withCredentials: true,
-        }
-      );
+      const res = await axios.get(`${API_URL}/api/diaries/check`, {
+        params: { date: dateKey },
+        withCredentials: true,
+      });
 
       const { mode, diaryId } = res.data;
 
@@ -85,13 +83,10 @@ function DiaryCalendar() {
 
     if (writtenDiaryMap[dateKey]) {
       try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/diaries/check`,
-          {
-            params: { date: dateKey },
-            withCredentials: true,
-          }
-        );
+        const res = await axios.get(`${API_URL}/api/diaries/check`, {
+          params: { date: dateKey },
+          withCredentials: true,
+        });
         const { diaryId } = res.data;
 
         navigate("/diary/detail", {

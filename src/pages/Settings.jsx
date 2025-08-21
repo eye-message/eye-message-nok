@@ -3,6 +3,7 @@ import axios from "axios";
 import "../styles/Settings.css";
 import { parseLocalDate, formatLocalDate } from "../utils/date";
 import Login from "./Login";
+import { API_URL } from "../constants/config";
 
 function Settings() {
   const [guardian, setGuardian] = useState(null);
@@ -27,7 +28,7 @@ function Settings() {
   // 현재 로그인 정보 가져오기
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/api/v1/auth/check/currentinfo`, {
+      .get(`${API_URL}/api/v1/auth/check/currentinfo`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -62,11 +63,9 @@ function Settings() {
   // 로그아웃
   const handleLogout = async () => {
     try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/auth/logout`,
-        null,
-        { withCredentials: true }
-      );
+      await axios.post(`${API_URL}/api/v1/auth/logout`, null, {
+        withCredentials: true,
+      });
       alert("로그아웃 되었습니다.");
       window.location.href = "/";
     } catch (err) {
@@ -82,10 +81,9 @@ function Settings() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/v1/auth/guardian`,
-        { withCredentials: true }
-      );
+      await axios.delete(`${API_URL}/api/v1/auth/guardian`, {
+        withCredentials: true,
+      });
       alert("회원 탈퇴 완료");
       window.location.href = "/";
     } catch (err) {
@@ -151,18 +149,14 @@ function Settings() {
       }
 
       if (editMode === "guardian") {
-        await axios.put(
-          `${import.meta.env.VITE_API_URL}/api/v1/auth/guardian`,
-          payload,
-          { withCredentials: true }
-        );
+        await axios.put(`${API_URL}/api/v1/auth/guardian`, payload, {
+          withCredentials: true,
+        });
         alert("보호자 정보가 수정되었습니다.");
       } else if (editMode === "patient") {
-        await axios.put(
-          `${import.meta.env.VITE_API_URL}/api/v1/auth/patientinfo`,
-          payload,
-          { withCredentials: true }
-        );
+        await axios.put(`${API_URL}/api/v1/auth/patientinfo`, payload, {
+          withCredentials: true,
+        });
         alert("환자 정보가 수정되었습니다.");
       }
       setEditMode(null);
